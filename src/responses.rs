@@ -1,25 +1,52 @@
-// {
-//     "lat": "39.91778",
-//     "lon": "-75.241295",
-//     "trainno": "219",
-//     "service": "LOCAL",
-//     "dest": "Wilmington",
-//     "currentstop": "Penn Medicine Station",
-//     "nextstop": "Darby",
-//     "line": "Wilmington/Newark",
-//     "consist": "401,330,331,384,385",
-//     "heading": 227.33208020847601,
-//     "late": 8,
-//     "SOURCE": "Conshohocken",
-//     "TRACK": "",
-//     "TRACK_CHANGE": ""
-//   }
-
 use serde_derive::Deserialize;
 
-use crate::deserialize::deserialize_csv_encoded_string;
+use crate::{
+    deserialize::{deserialize_csv_encoded_string, deserialize_string_enum},
+    types::RegionalRailsLine,
+};
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum ApiResponse<T> {
+    Error(ApiError),
+    Response(T),
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ApiError {
+    pub error: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ArrivalsResponse {
+    #[serde(rename = "Northbound")]
+    pub northbound: Option<Vec<Arrivals>>,
+
+    #[serde(rename = "Southbound")]
+    pub southbound: Option<Vec<Arrivals>>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Arrivals {
+    pub direction: String,
+    pub path: String,
+    pub train_id: String,
+    pub origin: String,
+    pub destination: String,
+    pub line: RegionalRailsLine,
+    pub status: String,
+    pub service_type: String,
+    pub next_station: String,
+    pub sched_time: String,
+    pub depart_time: String,
+    pub track: String,
+    pub track_change: Option<String>,
+    pub platform: String,
+    pub platform_change: Option<String>,
+}
 
 pub type TrainResponse = Vec<Train>;
+pub type TrainApiResponse = ApiResponse<TrainResponse>;
 
 #[derive(Debug, Deserialize)]
 pub struct Train {
@@ -37,7 +64,8 @@ pub struct Train {
     #[serde(rename = "nextstop")]
     pub next_stop: String,
 
-    pub line: String,
+    #[serde(deserialize_with = "deserialize_string_enum")]
+    pub line: RegionalRailsLine,
 
     #[serde(deserialize_with = "deserialize_csv_encoded_string")]
     pub consist: Vec<i32>,
