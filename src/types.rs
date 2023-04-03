@@ -49,9 +49,7 @@ impl RegionalRailsLine {
     }
 
     pub fn stops(&self) -> Vec<RegionalRailStop> {
-        match *self {
-            _ => unimplemented!(),
-        }
+        unimplemented!()
     }
 }
 

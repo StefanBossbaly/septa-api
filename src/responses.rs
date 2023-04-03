@@ -45,8 +45,8 @@ pub struct Arrivals {
     pub platform_change: Option<String>,
 }
 
-pub type TrainResponse = Vec<Train>;
 pub type TrainApiResponse = ApiResponse<TrainResponse>;
+pub type TrainResponse = Vec<Train>;
 
 #[derive(Debug, Deserialize)]
 pub struct Train {

@@ -1,9 +1,14 @@
+use serde::de::DeserializeOwned;
+
 use crate::{
+    errors,
     requests::{self, Request},
-    responses::{self, ArrivalsResponse, TrainApiResponse, TrainResponse},
+    responses::{self, ApiResponse},
 };
 
 const BASE_API_URL: &str = "https://www3.septa.org/api";
+
+pub type Result<T> = std::result::Result<T, errors::Error>;
 
 #[derive(Default)]
 pub struct Client {}
@@ -13,36 +18,51 @@ impl Client {
         Self::default()
     }
 
-    pub async fn arrivals(
-        &self,
-        request: requests::ArrivalsRequest,
-    ) -> Result<responses::ArrivalsResponse, Box<dyn std::error::Error>> {
-        let url = format!("{}{}", BASE_API_URL, "/Arrivals/index.php");
+    async fn get<R: DeserializeOwned>(&self, endpoint: &str) -> Result<R> {
+        let url = format!("{}{}", BASE_API_URL, endpoint);
 
         let response = reqwest::Client::new()
-            .get(&url)
-            .query(&request.into_params())
+            .get(url)
             .send()
             .await?
-            .json::<ArrivalsResponse>()
-            .await?;
-
-        Ok(response)
-    }
-
-    pub async fn train_view(&self) -> Result<TrainResponse, Box<dyn std::error::Error>> {
-        let url = format!("{}{}", BASE_API_URL, "/TrainView/index.php");
-
-        let response = reqwest::Client::new()
-            .get(&url)
-            .send()
-            .await?
-            .json::<TrainApiResponse>()
+            .json::<ApiResponse<R>>()
             .await?;
 
         match response {
-            responses::ApiResponse::Error(error) => Err(error.error.into()),
+            responses::ApiResponse::Error(error) => Err(error.into()),
             responses::ApiResponse::Response(response) => Ok(response),
         }
+    }
+
+    async fn get_request<T: Request, R: DeserializeOwned>(
+        &self,
+        endpoint: &str,
+        request: T,
+    ) -> Result<R> {
+        let url = format!("{}{}", BASE_API_URL, endpoint);
+
+        let response = reqwest::Client::new()
+            .get(url)
+            .query(&request.into_params())
+            .send()
+            .await?
+            .json::<ApiResponse<R>>()
+            .await?;
+
+        match response {
+            responses::ApiResponse::Error(error) => Err(error.into()),
+            responses::ApiResponse::Response(response) => Ok(response),
+        }
+    }
+
+    pub async fn arrivals(
+        &self,
+        request: requests::ArrivalsRequest,
+    ) -> Result<responses::ArrivalsResponse> {
+        self.get_request("/Arrivals/index.php", request).await
+    }
+
+    pub async fn train_view(&self) -> Result<responses::TrainResponse> {
+        self.get("/TrainView/index.php").await
     }
 }
