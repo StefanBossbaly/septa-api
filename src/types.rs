@@ -1,4 +1,5 @@
 use serde_derive::Deserialize;
+use strum::{Display, EnumString};
 
 pub enum TransportType {
     Bus,
@@ -8,23 +9,34 @@ pub enum TransportType {
     Trolley,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Display, EnumString)]
+#[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailsLine {
     Airport,
     ChestnutHillEast,
     ChestnutHillWest,
     Cynwyd,
     FoxChase,
+
+    #[strum(serialize = "Lansdale/Doylestown")]
     LansdaleDoylestown,
+
+    #[strum(serialize = "Media/Wawa")]
     MediaWawa,
+
+    #[strum(serialize = "Manayunk/Norristown")]
     ManayunkNorristown,
+
+    #[strum(serialize = "Paoli/Thorndale")]
     PaoliThorndale,
     Trenton,
+
+    #[strum(serialize = "Warminster")]
     Warminster,
+
+    #[strum(serialize = "Wilmington/Newark")]
     WilmingtonNewark,
     WestTrenton,
-    GlensideCombined,
-    CenterCity,
 }
 
 impl RegionalRailsLine {
@@ -43,8 +55,6 @@ impl RegionalRailsLine {
             Self::Warminster => "WAR",
             Self::WilmingtonNewark => "WIL",
             Self::WestTrenton => "WTR",
-            Self::GlensideCombined => "GLN",
-            Self::CenterCity => "CC",
         }
     }
 
@@ -53,54 +63,20 @@ impl RegionalRailsLine {
     }
 }
 
-impl std::str::FromStr for RegionalRailsLine {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "Airport" => Ok(Self::Airport),
-            "Chestnut Hill East" => Ok(Self::ChestnutHillEast),
-            "Chestnut Hill West" => Ok(Self::ChestnutHillWest),
-            "Cynwyd" => Ok(Self::Cynwyd),
-            "Fox Chase" => Ok(Self::FoxChase),
-            "Lansdale/Doylestown" => Ok(Self::LansdaleDoylestown),
-            "Media/Wawa" => Ok(Self::MediaWawa),
-            "Manayunk/Norristown" => Ok(Self::ManayunkNorristown),
-            "Paoli/Thorndale" => Ok(Self::PaoliThorndale),
-            "Trenton" => Ok(Self::Trenton),
-            "Warminster" => Ok(Self::Warminster),
-            "Wilmington/Newark" => Ok(Self::WilmingtonNewark),
-            "West Trenton" => Ok(Self::WestTrenton),
-            "Glenside Combined" => Ok(Self::GlensideCombined),
-            "Center City" => Ok(Self::CenterCity),
-            _ => Err("Bad Value".to_string()),
-        }
-    }
-}
-
-impl std::fmt::Display for RegionalRailsLine {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Airport => write!(f, "Airport"),
-            Self::ChestnutHillEast => write!(f, "Chestnut Hill East"),
-            Self::ChestnutHillWest => write!(f, "Chestnut Hill West"),
-            Self::Cynwyd => write!(f, "Cynwyd"),
-            Self::FoxChase => write!(f, "Fox Chase"),
-            Self::LansdaleDoylestown => write!(f, "Lansdale/Doylestown"),
-            Self::MediaWawa => write!(f, "Media/Wawa"),
-            Self::ManayunkNorristown => write!(f, "Manayunk/Norristown"),
-            Self::PaoliThorndale => write!(f, "Paoli/Thorndale"),
-            Self::Trenton => write!(f, "Trenton"),
-            Self::Warminster => write!(f, "Warminster"),
-            Self::WilmingtonNewark => write!(f, "Wilmington/Newark"),
-            Self::WestTrenton => write!(f, "West Trenton"),
-            Self::GlensideCombined => write!(f, "Glenside Combined"),
-            Self::CenterCity => write!(f, "Center City"),
-        }
-    }
-}
-
+#[derive(Debug, Deserialize, PartialEq, Display, EnumString)]
+#[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailStop {
+    // Airport Line Stops
+    #[strum(serialize = "Airport Terminal E F")]
+    AirportTerminalEF,
+    #[strum(serialize = "Airport Terminal C D")]
+    AirportTerminalCD,
+    #[strum(serialize = "Airport Terminal B")]
+    AirportTerminalB,
+    #[strum(serialize = "Airport Terminal A")]
+    AirportTerminalA,
+    Eastwick,
+
     // Chestnut Hill East Line Stops
     Stenton,
     Wyndmoor,
@@ -108,7 +84,7 @@ pub enum RegionalRailStop {
     Gravers,
     Germantown,
     Sedgwick,
-    WayneJunction,
+    #[strum(serialize = "Chestnut H East")]
     ChestnutHillEast,
     WashingtonLane,
     MountAiry,
@@ -116,7 +92,9 @@ pub enum RegionalRailStop {
     // Chestnut Hill West Line Stops
     NorthPhiladelphia,
     Upsal,
+    #[strum(serialize = "St. Martins")]
     StMartins,
+    #[strum(serialize = "Chestnut H West")]
     ChestnutHillWest,
     CheltenAvenue,
     Carpenter,
@@ -125,6 +103,74 @@ pub enum RegionalRailStop {
     Highland,
     QueenLane,
 
+    // Cynwyd Line Stops
+    Cynwyd,
+    Bala,
+    WynnefieldAvenue,
+
+    // Fox Chase Line Stops
+    FoxChase,
+    Ryers,
+    Cheltenham,
+    Lawndale,
+    Olney,
+
+    // Lansdale/Doylestown Line Stops
+    Doylestown,
+    DelawareValleyCollege,
+    NewBritain,
+    Chalfont,
+    LinkBelt,
+    Colmar,
+    Fortuna,
+    #[strum(serialize = "9th Street Lansdale")]
+    NinthStreetLansdale,
+    Lansdale,
+    Pennbrook,
+    NorthWales,
+    GwyneddValley,
+    Penllyn,
+    Ambler,
+    FortWashington,
+    Oreland,
+    NorthHills,
+    NorthBroad,
+
+    // Media/Wawa Line Stops
+    Wawa,
+    Elwyn,
+    Media,
+    #[strum(serialize = "Moylan-Rose Valley")]
+    MoylanRoseValley,
+    Wallingford,
+    Swarthmore,
+    Morton,
+    Secane,
+    Primos,
+    #[strum(serialize = "Clifton-Aldan")]
+    CliftonAldan,
+    Gladstone,
+    Lansdowne,
+    #[strum(serialize = "Fernwood-Yeadon")]
+    FernwoodYeadon,
+    Angora,
+    #[strum(serialize = "49th Street")]
+    FortyNinthStreet,
+
+    // Manayunk/Norristown Line Stops
+    NorristownElmStreet,
+    MainStreet,
+    #[strum(serialize = "Norristown T.C.")]
+    NorristownTC,
+    Conshohocken,
+    SpringMill,
+    Miquon,
+    IvyRidge,
+    Manayunk,
+    Wissahickon,
+    EastFalls,
+    Allegheny,
+
     // Paoli/Thorndale Line Stops
     Thorndale,
     Downingtown,
@@ -132,6 +178,8 @@ pub enum RegionalRailStop {
     Malvern,
     Paoli,
     Wayne,
+    #[strum(serialize = "St. Davids")]
+    StDavids,
     Berwyn,
     Villanova,
     Strafford,
@@ -145,11 +193,83 @@ pub enum RegionalRailStop {
     Overbrook,
     Merion,
 
+    // Trenton Line Stops
+    Trenton,
+    Levittown,
+    Bristol,
+    Croydon,
+    Eddington,
+    CornwellsHeights,
+    Torresdale,
+    HolmesburgJct,
+    Tacony,
+    Bridesburg,
+    NorthPhiladelphiaAmtrak,
+
+    // Warminster Line Stops
+    Warminster,
+    Hatboro,
+    WillowGrove,
+    Crestmont,
+    Roslyn,
+    Ardsley,
+
+    // Wilmington/Newark Line Stops
+    Newark,
+    #[strum(serialize = "Churchman's Crossing")]
+    ChurchmansCrossing,
+    Wilmington,
+    Claymont,
+    MarcusHook,
+    HighlandAvenue,
+    Chester,
+    Eddystone,
+    CrumLynne,
+    RidleyPark,
+    ProspectParkMoore,
+    Norwood,
+    Glenolden,
+    Folcroft,
+    SharonHill,
+    CurtisPark,
+    Darby,
+
+    // West Trenton Line Stops
+    WestTrenton,
+    Yardley,
+    Woodbourne,
+    Langhorne,
+    Neshaminy,
+    Trevose,
+    Somerton,
+    ForestHills,
+    Philmont,
+    Bethayres,
+    Meadowbrook,
+    Rydal,
+    Noble,
+
+    // Shared Stops
+    WayneJunction,
+    Glenside,
+    JenkintownWyncote,
+    #[strum(serialize = "Fern Rock T C")]
+    FernRockTC,
+    ElkinsPark,
+    MelrosePark,
+
     // Shared Center City Stops
+    #[strum(serialize = "30th Street Station", serialize = "30th St")]
     Gray30thStreet,
     SuburbanStation,
     JeffersonStation,
+    #[strum(serialize = "Temple U", serialize = "Temple University")]
     TempleUniversity,
+    PennMedicineStation,
+
+    // Unknown Stop
+    #[strum(default)]
+    Unknown(String),
 }
 
 impl RegionalRailStop {
