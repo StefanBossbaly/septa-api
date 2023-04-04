@@ -8,7 +8,7 @@ pub enum TransportType {
     Subway,
     Trolley,
 }
-#[derive(Debug, Deserialize, Display, EnumString)]
+#[derive(Debug, Deserialize, Display, EnumString, PartialEq)]
 #[strum(serialize_all = "UPPERCASE")]
 pub enum ServiceType {
     Express,
@@ -18,7 +18,7 @@ pub enum ServiceType {
     Unknown(String),
 }
 
-#[derive(Debug, Deserialize, Display, EnumString)]
+#[derive(Debug, Deserialize, Display, EnumString, PartialEq)]
 #[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailsLine {
     Airport,
@@ -169,7 +169,7 @@ pub enum RegionalRailStop {
     // Manayunk/Norristown Line Stops
     NorristownElmStreet,
     MainStreet,
-    #[strum(serialize = "Norristown T.C.")]
+    #[strum(serialize = "Norristown T.C.", serialize = "Norristown")]
     NorristownTC,
     Conshohocken,
     SpringMill,
@@ -268,7 +268,11 @@ pub enum RegionalRailStop {
     MelrosePark,
 
     // Shared Center City Stops
-    #[strum(serialize = "30th Street Station", serialize = "30th St")]
+    #[strum(
+        serialize = "30th Street Station",
+        serialize = "30th St",
+        serialize = "Gray 30th Street"
+    )]
     Gray30thStreet,
     SuburbanStation,
     JeffersonStation,
