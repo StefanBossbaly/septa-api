@@ -313,3 +313,49 @@ impl RegionalRailStop {
         }
     }
 }
+
+#[derive(Debug, Deserialize, PartialEq, Display, EnumString)]
+pub enum NhslStop {
+    #[strum(serialize = "Norristown Transportation Center - NHSL")]
+    NorristownTransportationCenter,
+    #[strum(serialize = "Bridgeport Station - NHSL")]
+    BridgeportStation,
+    #[strum(serialize = "DeKalb St Station - NHSL")]
+    DeKalbStStation,
+    #[strum(serialize = "Hughes Park Station - NHSL")]
+    HughesParkStation,
+    #[strum(serialize = "Gulph Mills Station - NHSL")]
+    GulphMillsStation,
+    #[strum(serialize = "Matsonford Station - NHSL")]
+    MatsonfordStation,
+    #[strum(serialize = "County Line Station - NHSL")]
+    CountyLineStation,
+    #[strum(serialize = "Radnor Station - NHSL")]
+    RadnorStation,
+    #[strum(serialize = "Villanova Station - NHSL")]
+    VillanovaStation,
+    #[strum(serialize = "Stadium Station - NHSL")]
+    StadiumStation,
+    #[strum(serialize = "Garrett Hill Station - NHSL")]
+    GarrettHillStation,
+    #[strum(serialize = "Roberts Rd Station - NHSL")]
+    RobertsRdStation,
+    #[strum(serialize = "Bryn Mawr Station - NHSL")]
+    BrynMawrStation,
+    #[strum(serialize = "Haverford Station - NHSL")]
+    HaverfordStation,
+    #[strum(serialize = "Ardmore Junction Station - NHSL")]
+    ArdmoreJunctionStation,
+    #[strum(serialize = "Wynnewood Rd Station - NHSL")]
+    WynnewoodRdStation,
+    #[strum(serialize = "Beechwood Brookline Station - NHSL")]
+    BeechwoodBrooklineStation,
+    #[strum(serialize = "Penfield Station Manoa Rd - NHSL")]
+    PenfieldStationManoaRd,
+    #[strum(serialize = "Township Line Rd Station - NHSL")]
+    TownshipLineRdStation,
+    #[strum(serialize = "Parkview Station - NHSL")]
+    ParkviewStation,
+    #[strum(serialize = "69th St Transportation Center - NHSL")]
+    SixtyNinthStTransportationCenter,
+}
