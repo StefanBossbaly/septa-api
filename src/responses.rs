@@ -82,8 +82,8 @@ pub struct Train {
 
     pub late: i32,
 
-    #[serde(rename = "SOURCE")]
-    pub source: String,
+    #[serde(rename = "SOURCE", deserialize_with = "deserialize_string_enum")]
+    pub source: RegionalRailStop,
 
     #[serde(rename = "TRACK")]
     pub track: String,
