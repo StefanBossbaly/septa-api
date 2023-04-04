@@ -10,16 +10,31 @@ const BASE_API_URL: &str = "https://www3.septa.org/api";
 
 pub type Result<T> = std::result::Result<T, errors::Error>;
 
-#[derive(Default)]
-pub struct Client {}
+pub struct Client {
+    base_url: String,
+}
+
+impl Default for Client {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl Client {
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            base_url: BASE_API_URL.to_string(),
+        }
+    }
+
+    pub fn with_base_url(base_url: &str) -> Self {
+        Self {
+            base_url: base_url.to_string(),
+        }
     }
 
     async fn get<R: DeserializeOwned>(&self, endpoint: &str) -> Result<R> {
-        let url = format!("{}{}", BASE_API_URL, endpoint);
+        let url = format!("{}{}", self.base_url, endpoint);
 
         let response = reqwest::Client::new()
             .get(url)
@@ -39,7 +54,7 @@ impl Client {
         endpoint: &str,
         request: T,
     ) -> Result<R> {
-        let url = format!("{}{}", BASE_API_URL, endpoint);
+        let url = format!("{}{}", self.base_url, endpoint);
 
         let response = reqwest::Client::new()
             .get(url)
