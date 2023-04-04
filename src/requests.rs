@@ -4,6 +4,7 @@ pub trait Request {
     fn into_params(self) -> Vec<(&'static str, String)>;
 }
 
+#[derive(Debug)]
 pub enum Direction {
     North,
     South,

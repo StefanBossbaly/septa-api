@@ -8,6 +8,15 @@ pub enum TransportType {
     Subway,
     Trolley,
 }
+#[derive(Debug, Deserialize, Display, EnumString)]
+#[strum(serialize_all = "UPPERCASE")]
+pub enum ServiceType {
+    Express,
+    Local,
+
+    #[strum(default)]
+    Unknown(String),
+}
 
 #[derive(Debug, Deserialize, Display, EnumString)]
 #[strum(serialize_all = "title_case", ascii_case_insensitive)]

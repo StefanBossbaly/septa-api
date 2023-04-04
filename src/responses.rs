@@ -2,7 +2,7 @@ use serde_derive::Deserialize;
 
 use crate::{
     deserialize::{deserialize_csv_encoded_string, deserialize_string_enum},
-    types::{RegionalRailStop, RegionalRailsLine},
+    types::{RegionalRailStop, RegionalRailsLine, ServiceType},
 };
 
 #[derive(Debug, Deserialize)]
@@ -33,9 +33,13 @@ pub struct Arrivals {
     pub train_id: String,
     pub origin: String,
     pub destination: String,
+
+    #[serde(deserialize_with = "deserialize_string_enum")]
     pub line: RegionalRailsLine,
     pub status: String,
-    pub service_type: String,
+
+    #[serde(deserialize_with = "deserialize_string_enum")]
+    pub service_type: ServiceType,
     pub next_station: String,
     pub sched_time: String,
     pub depart_time: String,
@@ -55,7 +59,9 @@ pub struct Train {
 
     #[serde(rename = "trainno")]
     pub train_number: String,
-    pub service: String,
+
+    #[serde(deserialize_with = "deserialize_string_enum")]
+    pub service: ServiceType,
 
     #[serde(deserialize_with = "deserialize_string_enum")]
     pub dest: RegionalRailStop,
