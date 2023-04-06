@@ -169,7 +169,11 @@ pub enum RegionalRailStop {
     // Manayunk/Norristown Line Stops
     NorristownElmStreet,
     MainStreet,
-    #[strum(serialize = "Norristown T.C.", serialize = "Norristown")]
+    #[strum(
+        serialize = "Norristown T.C.",
+        serialize = "Norristown",
+        serialize = "Norristown TC"
+    )]
     NorristownTC,
     Conshohocken,
     SpringMill,
