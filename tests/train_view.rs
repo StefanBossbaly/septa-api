@@ -118,3 +118,32 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
 
     Ok(())
 }
+
+// This is an actual response I got from the API when it was down
+#[tokio::test]
+async fn test_api_down_test_async() -> Result<(), septa_api::errors::Error> {
+    let mut server = mockito::Server::new();
+    let mock_server = create_mock_server(&mut server, "/TrainView/index.php")
+        .with_body(
+        r#"
+        [
+            {
+                "error": "We apologize for the inconvenience, but we are experiencing difficulties at this time.  TrainView has been disabled."
+            }
+        ]"#)
+        .create_async()
+        .await;
+
+    let client = Client::with_base_url(server.url().as_str());
+    let trains = client.train_view().await;
+
+    assert!(trains.is_err());
+    match trains.unwrap_err() {
+        septa_api::errors::Error::ApiErrorResponse(e) => assert_eq!(e, "We apologize for the inconvenience, but we are experiencing difficulties at this time.  TrainView has been disabled."),
+        _ => unreachable!()
+    }
+
+    mock_server.assert_async().await;
+
+    Ok(())
+}

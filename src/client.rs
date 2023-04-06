@@ -44,11 +44,12 @@ impl Client {
             .await?;
 
         match response {
-            responses::ApiResponse::Error(error) => Err(error.into()),
+            responses::ApiResponse::Error(error) => Err(errors::Error::ApiErrorResponse(error)),
             responses::ApiResponse::Response(response) => Ok(response),
         }
     }
 
+    #[allow(dead_code)]
     async fn get_request<T: Request, R: DeserializeOwned>(
         &self,
         endpoint: &str,
@@ -65,16 +66,18 @@ impl Client {
             .await?;
 
         match response {
-            responses::ApiResponse::Error(error) => Err(error.into()),
+            responses::ApiResponse::Error(error) => Err(errors::Error::ApiErrorResponse(error)),
             responses::ApiResponse::Response(response) => Ok(response),
         }
     }
 
+    #[allow(dead_code)]
     pub async fn arrivals(
         &self,
-        request: requests::ArrivalsRequest,
+        _request: requests::ArrivalsRequest,
     ) -> Result<responses::ArrivalsResponse> {
-        self.get_request("/Arrivals/index.php", request).await
+        unimplemented!()
+        // self.get_request("/Arrivals/index.php", request).await
     }
 
     pub async fn train_view(&self) -> Result<responses::TrainResponse> {

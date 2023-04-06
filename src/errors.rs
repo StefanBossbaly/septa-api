@@ -1,12 +1,10 @@
 use std::fmt;
 
-use crate::responses::ApiError;
-
 #[derive(Debug)]
 pub enum Error {
     RequestFailed(reqwest::Error),
     DeserializeFailed(serde_json::error::Error),
-    ApiErrorResponse(ApiError),
+    ApiErrorResponse(String),
 }
 
 impl std::error::Error for Error {}
@@ -21,7 +19,7 @@ impl fmt::Display for Error {
                 write!(f, "Unable to deserialize the received value: {}", e)
             }
             Self::ApiErrorResponse(e) => {
-                write!(f, "API returned an error response: {}", e.error)
+                write!(f, "API returned an error response: {}", e)
             }
         }
     }
@@ -36,11 +34,5 @@ impl From<serde_json::error::Error> for Error {
 impl From<reqwest::Error> for Error {
     fn from(error: reqwest::Error) -> Self {
         Self::RequestFailed(error)
-    }
-}
-
-impl From<ApiError> for Error {
-    fn from(error: ApiError) -> Self {
-        Self::ApiErrorResponse(error)
     }
 }

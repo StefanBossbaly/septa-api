@@ -1,28 +1,22 @@
 use serde_derive::Deserialize;
 
 use crate::{
-    deserialize::{deserialize_csv_encoded_string, deserialize_string_enum},
+    deserialize::{deserialize_api_error, deserialize_csv_encoded_string, deserialize_string_enum},
     types::{RegionalRailStop, RegionalRailsLine, ServiceType},
 };
 
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum ApiResponse<T> {
-    Error(ApiError),
     Response(T),
+    #[serde(deserialize_with = "deserialize_api_error")]
+    Error(String),
 }
 
-#[derive(Debug, Deserialize)]
-pub struct ApiError {
-    pub error: String,
-}
-
-#[derive(Debug, Deserialize)]
+#[derive(Debug)]
 pub struct ArrivalsResponse {
-    #[serde(rename = "Northbound")]
+    pub title: String,
     pub northbound: Option<Vec<Arrivals>>,
-
-    #[serde(rename = "Southbound")]
     pub southbound: Option<Vec<Arrivals>>,
 }
 
