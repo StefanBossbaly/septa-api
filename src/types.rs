@@ -76,9 +76,9 @@ impl RegionalRailsLine {
 #[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailStop {
     // Airport Line Stops
-    #[strum(serialize = "Airport Terminal E F")]
+    #[strum(serialize = "Airport Terminal E F", serialize = "Airport Terminal E-F")]
     AirportTerminalEF,
-    #[strum(serialize = "Airport Terminal C D")]
+    #[strum(serialize = "Airport Terminal C D", serialize = "Airport Terminal C-D")]
     AirportTerminalCD,
     #[strum(serialize = "Airport Terminal B")]
     AirportTerminalB,
@@ -93,7 +93,7 @@ pub enum RegionalRailStop {
     Gravers,
     Germantown,
     Sedgwick,
-    #[strum(serialize = "Chestnut H East")]
+    #[strum(serialize = "Chestnut Hill East", serialize = "Chestnut H East")]
     ChestnutHillEast,
     WashingtonLane,
     MountAiry,
@@ -103,7 +103,7 @@ pub enum RegionalRailStop {
     Upsal,
     #[strum(serialize = "St. Martins")]
     StMartins,
-    #[strum(serialize = "Chestnut H West")]
+    #[strum(serialize = "Chestnut Hill West", serialize = "Chestnut H West")]
     ChestnutHillWest,
     CheltenAvenue,
     Carpenter,
@@ -275,7 +275,9 @@ pub enum RegionalRailStop {
     #[strum(
         serialize = "30th Street Station",
         serialize = "30th St",
-        serialize = "Gray 30th Street"
+        serialize = "30th Street Gray",
+        serialize = "Gray 30th Street",
+        serialize = "Gray 30th St"
     )]
     Gray30thStreet,
     SuburbanStation,
