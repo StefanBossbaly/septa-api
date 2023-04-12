@@ -29,7 +29,7 @@ impl Request for ArrivalsRequest {
     fn into_params(self) -> Vec<(&'static str, String)> {
         let mut params = Vec::new();
 
-        params.push(("station", self.station.stop_id().to_string()));
+        params.push(("station", self.station.to_string()));
 
         if let Some(direction) = self.direction {
             params.push(("direction", direction.to_string()));
@@ -53,8 +53,8 @@ impl Request for NextToArriveRequest {
     fn into_params(self) -> Vec<(&'static str, String)> {
         let mut params = Vec::new();
 
-        params.push(("req1", self.starting_station.stop_id().to_string()));
-        params.push(("req2", self.ending_station.stop_id().to_string()));
+        params.push(("req1", self.starting_station.to_string()));
+        params.push(("req2", self.ending_station.to_string()));
 
         if let Some(results) = self.results {
             params.push(("req3", results.to_string()));
