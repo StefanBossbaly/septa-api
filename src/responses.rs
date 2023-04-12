@@ -3,7 +3,10 @@ use std::collections::HashMap;
 use std::convert::TryFrom;
 
 use crate::{
-    deserialize::{deserialize_api_error, deserialize_csv_encoded_string, deserialize_string_enum},
+    deserialize::{
+        deserialize_api_error, deserialize_csv_encoded_string, deserialize_optional_string_enum,
+        deserialize_string_enum,
+    },
     types::{RegionalRailStop, RegionalRailsLine, ServiceType},
 };
 
@@ -82,8 +85,9 @@ pub struct Arrivals {
     #[serde(deserialize_with = "deserialize_string_enum")]
     pub service_type: ServiceType,
 
-    #[serde(deserialize_with = "deserialize_string_enum")]
-    pub next_station: RegionalRailStop,
+    #[serde(deserialize_with = "deserialize_optional_string_enum")]
+    pub next_station: Option<RegionalRailStop>,
+
     pub sched_time: String,
     pub depart_time: String,
     pub track: String,

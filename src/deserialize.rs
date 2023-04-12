@@ -7,11 +7,19 @@ pub fn deserialize_csv_encoded_string<'a, D: de::Deserializer<'a>>(
     deserializer.deserialize_str(CsvEncodedStringVisitor)
 }
 
+pub fn deserialize_optional_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
+    deserializer: D,
+) -> Result<Option<T>, D::Error> {
+    deserializer.deserialize_option(OptionStringEnumVisitor {
+        _marker: Default::default(),
+    })
+}
+
 pub fn deserialize_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
     deserializer: D,
 ) -> Result<T, D::Error> {
     deserializer.deserialize_str(StringEnumVisitor {
-        _marker: std::marker::PhantomData,
+        _marker: Default::default(),
     })
 }
 
@@ -42,6 +50,37 @@ impl<'a> de::Visitor<'a> for CsvEncodedStringVisitor {
         }
 
         Ok(result)
+    }
+}
+
+#[derive(Default)]
+struct OptionStringEnumVisitor<'a, T: FromStr> {
+    _marker: std::marker::PhantomData<&'a T>,
+}
+
+impl<'a, T: FromStr> de::Visitor<'a> for OptionStringEnumVisitor<'a, T> {
+    type Value = Option<T>;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            formatter,
+            "a string representation an enum value that can be null"
+        )
+    }
+
+    // Can be called T can be a PhantomData Unit Struct
+    fn visit_unit<E: de::Error>(self) -> Result<Self::Value, E> {
+        Ok(None)
+    }
+
+    fn visit_none<E: de::Error>(self) -> Result<Self::Value, E> {
+        Ok(None)
+    }
+
+    fn visit_some<D: de::Deserializer<'a>>(self, d: D) -> Result<Self::Value, D::Error> {
+        Ok(Some(d.deserialize_str(StringEnumVisitor {
+            _marker: Default::default(),
+        })?))
     }
 }
 

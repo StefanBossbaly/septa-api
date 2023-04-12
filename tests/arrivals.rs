@@ -140,7 +140,10 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival1.line, RegionalRailsLine::WestTrenton);
     assert_eq!(arrival1.status, "12 min");
     assert_eq!(arrival1.service_type, ServiceType::Local);
-    assert_eq!(arrival1.next_station, RegionalRailStop::SuburbanStation);
+    assert_eq!(
+        arrival1.next_station,
+        Some(RegionalRailStop::SuburbanStation)
+    );
     assert_eq!(arrival1.sched_time, "2023-04-11 18:30:00.000");
     assert_eq!(arrival1.depart_time, "2023-04-11 18:30:00.000");
     assert_eq!(arrival1.track, "2");
@@ -158,7 +161,10 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival2.line, RegionalRailsLine::FoxChase);
     assert_eq!(arrival2.status, "On Time");
     assert_eq!(arrival2.service_type, ServiceType::Local);
-    assert_eq!(arrival2.next_station, RegionalRailStop::TempleUniversity);
+    assert_eq!(
+        arrival2.next_station,
+        Some(RegionalRailStop::TempleUniversity)
+    );
     assert_eq!(arrival2.sched_time, "2023-04-11 18:37:00.000");
     assert_eq!(arrival2.depart_time, "2023-04-11 18:37:00.000");
     assert_eq!(arrival2.track, "1");
@@ -176,7 +182,10 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival3.line, RegionalRailsLine::FoxChase);
     assert_eq!(arrival3.status, "On Time");
     assert_eq!(arrival3.service_type, ServiceType::Local);
-    assert_eq!(arrival3.next_station, RegionalRailStop::Gray30thStreet);
+    assert_eq!(
+        arrival3.next_station,
+        Some(RegionalRailStop::Gray30thStreet)
+    );
     assert_eq!(arrival3.sched_time, "2023-04-11 18:45:00.000");
     assert_eq!(arrival3.depart_time, "2023-04-11 18:45:00.000");
     assert_eq!(arrival3.track, "1");
@@ -194,7 +203,10 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival4.line, RegionalRailsLine::Trenton);
     assert_eq!(arrival4.status, "On Time");
     assert_eq!(arrival4.service_type, ServiceType::Local);
-    assert_eq!(arrival4.next_station, RegionalRailStop::NorthPhiladelphia);
+    assert_eq!(
+        arrival4.next_station,
+        Some(RegionalRailStop::NorthPhiladelphia)
+    );
     assert_eq!(arrival4.sched_time, "2023-04-11 18:59:00.000");
     assert_eq!(arrival4.depart_time, "2023-04-11 18:59:00.000");
     assert_eq!(arrival4.track, "2");
@@ -212,13 +224,231 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival5.line, RegionalRailsLine::MediaWawa);
     assert_eq!(arrival5.status, "1 min");
     assert_eq!(arrival5.service_type, ServiceType::Local);
-    assert_eq!(arrival5.next_station, RegionalRailStop::Secane);
+    assert_eq!(arrival5.next_station, Some(RegionalRailStop::Secane));
     assert_eq!(arrival5.sched_time, "2023-04-11 19:06:00.000");
     assert_eq!(arrival5.depart_time, "2023-04-11 19:06:00.000");
     assert_eq!(arrival5.track, "1");
     assert_eq!(arrival5.track_change, None);
     assert_eq!(arrival5.platform, "");
     assert_eq!(arrival5.platform_change, None);
+
+    mock_server.assert_async().await;
+
+    Ok(())
+}
+
+#[tokio::test]
+async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
+    let mut server = mockito::Server::new();
+    let mock_server = create_mock_server(
+        &mut server,
+        "/Arrivals/index.php?station=Malvern&direction=N",
+    )
+    .with_body(
+        r#"
+        {
+          "Malvern Departures: April 12, 2023, 5:46 pm":[
+             {
+                "Northbound":[
+                   {
+                      "direction":"N",
+                      "path":"R5\/3N",
+                      "train_id":"5348",
+                      "origin":"Malvern",
+                      "destination":"West Trenton",
+                      "line":"Paoli\/Thorndale",
+                      "status":"On Time",
+                      "service_type":"LOCAL",
+                      "next_station":null,
+                      "sched_time":"2023-04-12 18:26:00.000",
+                      "depart_time":"2023-04-12 18:26:00.000",
+                      "track":"1",
+                      "track_change":null,
+                      "platform":"",
+                      "platform_change":null
+                   },
+                   {
+                      "direction":"N",
+                      "path":"R5\/3N",
+                      "train_id":"5352",
+                      "origin":"Thorndale",
+                      "destination":"West Trenton",
+                      "line":"Paoli\/Thorndale",
+                      "status":"On Time",
+                      "service_type":"LOCAL",
+                      "next_station":null,
+                      "sched_time":"2023-04-12 19:26:00.000",
+                      "depart_time":"2023-04-12 19:26:00.000",
+                      "track":"1",
+                      "track_change":null,
+                      "platform":"",
+                      "platform_change":null
+                   },
+                   {
+                      "direction":"N",
+                      "path":"R5\/3N",
+                      "train_id":"5356",
+                      "origin":"Thorndale",
+                      "destination":"West Trenton",
+                      "line":"Paoli\/Thorndale",
+                      "status":"On Time",
+                      "service_type":"LOCAL",
+                      "next_station":null,
+                      "sched_time":"2023-04-12 20:26:00.000",
+                      "depart_time":"2023-04-12 20:26:00.000",
+                      "track":"1",
+                      "track_change":null,
+                      "platform":"",
+                      "platform_change":null
+                   },
+                   {
+                      "direction":"N",
+                      "path":"R5N",
+                      "train_id":"9564",
+                      "origin":"Malvern",
+                      "destination":"Temple U",
+                      "line":"Paoli\/Thorndale",
+                      "status":"On Time",
+                      "service_type":"LOCAL",
+                      "next_station":null,
+                      "sched_time":"2023-04-12 21:31:00.000",
+                      "depart_time":"2023-04-12 21:31:00.000",
+                      "track":"1",
+                      "track_change":null,
+                      "platform":"",
+                      "platform_change":null
+                   },
+                   {
+                      "direction":"N",
+                      "path":"R5N",
+                      "train_id":"9566",
+                      "origin":"Thorndale",
+                      "destination":"Temple U",
+                      "line":"Paoli\/Thorndale",
+                      "status":"On Time",
+                      "service_type":"LOCAL",
+                      "next_station":null,
+                      "sched_time":"2023-04-12 22:41:00.000",
+                      "depart_time":"2023-04-12 22:41:00.000",
+                      "track":"1",
+                      "track_change":null,
+                      "platform":"",
+                      "platform_change":null
+                   }
+                ]
+             }
+          ]
+       }
+    "#,
+    )
+    .create_async()
+    .await;
+
+    let client = Client::with_base_url(server.url().as_str());
+    let arrivals_request = ArrivalsRequest {
+        station: RegionalRailStop::Malvern,
+        results: None,
+        direction: Some(Direction::North),
+    };
+    let arrival_response = client.arrivals(arrivals_request).await?;
+
+    assert_eq!(
+        arrival_response.title,
+        "Malvern Departures: April 12, 2023, 5:46 pm"
+    );
+    assert_eq!(arrival_response.northbound.len(), 5);
+
+    // Check the first arrival
+    let arrival1 = &arrival_response.northbound[0];
+    assert_eq!(arrival1.direction, "N");
+    assert_eq!(arrival1.path, "R5/3N");
+    assert_eq!(arrival1.train_id, "5348");
+    assert_eq!(arrival1.origin, RegionalRailStop::Malvern);
+    assert_eq!(arrival1.destination, RegionalRailStop::WestTrenton);
+    assert_eq!(arrival1.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival1.status, "On Time");
+    assert_eq!(arrival1.service_type, ServiceType::Local);
+    assert_eq!(arrival1.next_station, None);
+    assert_eq!(arrival1.sched_time, "2023-04-12 18:26:00.000");
+    assert_eq!(arrival1.depart_time, "2023-04-12 18:26:00.000");
+    assert_eq!(arrival1.track, "1");
+    assert_eq!(arrival1.track_change, None);
+    assert_eq!(arrival1.platform, "");
+    assert_eq!(arrival1.platform_change, None);
+
+    // Check the second arrival
+    let arrival2 = &arrival_response.northbound[1];
+    assert_eq!(arrival2.direction, "N");
+    assert_eq!(arrival2.path, "R5/3N");
+    assert_eq!(arrival2.train_id, "5352");
+    assert_eq!(arrival2.origin, RegionalRailStop::Thorndale);
+    assert_eq!(arrival2.destination, RegionalRailStop::WestTrenton);
+    assert_eq!(arrival2.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival2.status, "On Time");
+    assert_eq!(arrival2.service_type, ServiceType::Local);
+    assert_eq!(arrival2.next_station, None);
+    assert_eq!(arrival2.sched_time, "2023-04-12 19:26:00.000");
+    assert_eq!(arrival2.depart_time, "2023-04-12 19:26:00.000");
+    assert_eq!(arrival2.track, "1");
+    assert_eq!(arrival2.track_change, None);
+    assert_eq!(arrival2.platform, "");
+    assert_eq!(arrival2.platform_change, None);
+
+    // Check the third arrival
+    let arrival3 = &arrival_response.northbound[2];
+    assert_eq!(arrival3.direction, "N");
+    assert_eq!(arrival3.path, "R5/3N");
+    assert_eq!(arrival3.train_id, "5356");
+    assert_eq!(arrival3.origin, RegionalRailStop::Thorndale);
+    assert_eq!(arrival3.destination, RegionalRailStop::WestTrenton);
+    assert_eq!(arrival3.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival3.status, "On Time");
+    assert_eq!(arrival3.service_type, ServiceType::Local);
+    assert_eq!(arrival3.next_station, None);
+    assert_eq!(arrival3.sched_time, "2023-04-12 20:26:00.000");
+    assert_eq!(arrival3.depart_time, "2023-04-12 20:26:00.000");
+    assert_eq!(arrival3.track, "1");
+    assert_eq!(arrival3.track_change, None);
+    assert_eq!(arrival3.platform, "");
+    assert_eq!(arrival3.platform_change, None);
+
+    // Check the fourth arrival
+    let arrival4 = &arrival_response.northbound[3];
+    assert_eq!(arrival4.direction, "N");
+    assert_eq!(arrival4.path, "R5N");
+    assert_eq!(arrival4.train_id, "9564");
+    assert_eq!(arrival4.origin, RegionalRailStop::Malvern);
+    assert_eq!(arrival4.destination, RegionalRailStop::TempleUniversity);
+    assert_eq!(arrival4.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival4.status, "On Time");
+    assert_eq!(arrival4.service_type, ServiceType::Local);
+    assert_eq!(arrival4.next_station, None);
+    assert_eq!(arrival4.sched_time, "2023-04-12 21:31:00.000");
+    assert_eq!(arrival4.depart_time, "2023-04-12 21:31:00.000");
+    assert_eq!(arrival4.track, "1");
+    assert_eq!(arrival4.track_change, None);
+    assert_eq!(arrival4.platform, "");
+    assert_eq!(arrival4.platform_change, None);
+
+    // Check the fifth arrival
+    let arrival5 = &arrival_response.northbound[4];
+    assert_eq!(arrival5.direction, "N");
+    assert_eq!(arrival5.path, "R5N");
+    assert_eq!(arrival5.train_id, "9566");
+    assert_eq!(arrival5.origin, RegionalRailStop::Thorndale);
+    assert_eq!(arrival5.destination, RegionalRailStop::TempleUniversity);
+    assert_eq!(arrival5.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival5.status, "On Time");
+    assert_eq!(arrival5.service_type, ServiceType::Local);
+    assert_eq!(arrival5.next_station, None);
+    assert_eq!(arrival5.sched_time, "2023-04-12 22:41:00.000");
+    assert_eq!(arrival5.depart_time, "2023-04-12 22:41:00.000");
+    assert_eq!(arrival5.track, "1");
+    assert_eq!(arrival5.track_change, None);
+    assert_eq!(arrival5.platform, "");
+    assert_eq!(arrival5.platform_change, None);
+
+    assert_eq!(arrival_response.southbound.len(), 0);
 
     mock_server.assert_async().await;
 
