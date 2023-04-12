@@ -160,7 +160,7 @@ pub enum RegionalRailStop {
     CliftonAldan,
     Gladstone,
     Lansdowne,
-    #[strum(serialize = "Fernwood-Yeadon")]
+    #[strum(serialize = "Fernwood-Yeadon", serialize = "Fernwood")]
     FernwoodYeadon,
     Angora,
     #[strum(serialize = "49th Street")]
