@@ -9,7 +9,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let arrivals_request = requests::ArrivalsRequest {
         station: types::RegionalRailStop::TempleUniversity,
-        results: Some(5),
+        results: None,
         direction: Some(requests::Direction::North),
     };
     let arrivals = client.arrivals(arrivals_request).await?;

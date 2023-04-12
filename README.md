@@ -14,7 +14,7 @@ developer to use the provided structures.
 
 | Endpoint                     | Implemented | Tested |
 | ---------------------------- | ----------- | ------ |
-| `/Arrivals/index.php`        | ❌          | ❌     |
+| `/Arrivals/index.php`        | ✅          | ✅     |
 | `/TrainView/index.php`       | ✅          | ✅     |
 | `/NextToArrive/index.php`    | ❌          | ❌     |
 | `/TransitView/index.php`     | ❌          | ❌     |
