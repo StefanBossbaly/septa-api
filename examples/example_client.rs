@@ -8,7 +8,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dbg!(response);
 
     let arrivals_request = requests::ArrivalsRequest {
-        station: types::RegionalRailStop::Exton,
+        station: types::RegionalRailStop::TempleUniversity,
         results: Some(5),
         direction: Some(requests::Direction::North),
     };

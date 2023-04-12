@@ -1,4 +1,6 @@
 use serde_derive::Deserialize;
+use std::collections::HashMap;
+use std::convert::TryFrom;
 
 use crate::{
     deserialize::{deserialize_api_error, deserialize_csv_encoded_string, deserialize_string_enum},
@@ -13,7 +15,10 @@ pub enum ApiResponse<T> {
     Error(String),
 }
 
-#[derive(Debug)]
+pub type ArrivalsApiResponse = ApiResponse<ArrivalsResponse>;
+
+#[derive(Debug, Deserialize)]
+#[serde(try_from = "ArrivalsResponseBuilder")]
 pub struct ArrivalsResponse {
     pub title: String,
     pub northbound: Option<Vec<Arrivals>>,
@@ -21,12 +26,50 @@ pub struct ArrivalsResponse {
 }
 
 #[derive(Debug, Deserialize)]
+struct ArrivalsResponseBuilder(HashMap<String, Vec<HashMap<String, Vec<Arrivals>>>>);
+
+impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
+    type Error = String;
+
+    fn try_from(builder: ArrivalsResponseBuilder) -> Result<Self, Self::Error> {
+        dbg!(&builder.0);
+        if builder.0.len() != 1 {
+            return Err(format!("expected 1 key, found {}", builder.0.len()));
+        }
+
+        let (title, mut values) = builder.0.into_iter().next().unwrap();
+
+        if values.len() != 1 {
+            return Err(format!("expected 1 value, found {}", values.len()));
+        }
+
+        let northbound: Option<Vec<Arrivals>> = values[0]
+            .get_mut("Northbound")
+            .map(|northbound| northbound.drain(..).collect());
+
+        let southbound: Option<Vec<Arrivals>> = values[0]
+            .get_mut("Southbound")
+            .map(|southbound| southbound.drain(..).collect());
+
+        Ok(ArrivalsResponse {
+            title,
+            northbound,
+            southbound,
+        })
+    }
+}
+
+#[derive(Debug, Deserialize)]
 pub struct Arrivals {
     pub direction: String,
     pub path: String,
     pub train_id: String,
-    pub origin: String,
-    pub destination: String,
+
+    #[serde(deserialize_with = "deserialize_string_enum")]
+    pub origin: RegionalRailStop,
+
+    #[serde(deserialize_with = "deserialize_string_enum")]
+    pub destination: RegionalRailStop,
 
     #[serde(deserialize_with = "deserialize_string_enum")]
     pub line: RegionalRailsLine,
@@ -34,7 +77,9 @@ pub struct Arrivals {
 
     #[serde(deserialize_with = "deserialize_string_enum")]
     pub service_type: ServiceType,
-    pub next_station: String,
+
+    #[serde(deserialize_with = "deserialize_string_enum")]
+    pub next_station: RegionalRailStop,
     pub sched_time: String,
     pub depart_time: String,
     pub track: String,

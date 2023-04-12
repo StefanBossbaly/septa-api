@@ -49,7 +49,6 @@ impl Client {
         }
     }
 
-    #[allow(dead_code)]
     async fn get_request<T: Request, R: DeserializeOwned>(
         &self,
         endpoint: &str,
@@ -71,13 +70,11 @@ impl Client {
         }
     }
 
-    #[allow(dead_code)]
     pub async fn arrivals(
         &self,
-        _request: requests::ArrivalsRequest,
+        request: requests::ArrivalsRequest,
     ) -> Result<responses::ArrivalsResponse> {
-        unimplemented!()
-        // self.get_request("/Arrivals/index.php", request).await
+        self.get_request("/Arrivals/index.php", request).await
     }
 
     pub async fn train_view(&self) -> Result<responses::TrainResponse> {
