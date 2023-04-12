@@ -21,8 +21,8 @@ pub type ArrivalsApiResponse = ApiResponse<ArrivalsResponse>;
 #[serde(try_from = "ArrivalsResponseBuilder")]
 pub struct ArrivalsResponse {
     pub title: String,
-    pub northbound: Option<Vec<Arrivals>>,
-    pub southbound: Option<Vec<Arrivals>>,
+    pub northbound: Vec<Arrivals>,
+    pub southbound: Vec<Arrivals>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -43,13 +43,17 @@ impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
             return Err(format!("expected 1 value, found {}", values.len()));
         }
 
-        let northbound: Option<Vec<Arrivals>> = values[0]
+        let northbound = values[0]
             .get_mut("Northbound")
-            .map(|northbound| northbound.drain(..).collect());
+            .unwrap_or(&mut Vec::new())
+            .drain(..)
+            .collect();
 
-        let southbound: Option<Vec<Arrivals>> = values[0]
+        let southbound = values[0]
             .get_mut("Southbound")
-            .map(|southbound| southbound.drain(..).collect());
+            .unwrap_or(&mut Vec::new())
+            .drain(..)
+            .collect();
 
         Ok(ArrivalsResponse {
             title,
