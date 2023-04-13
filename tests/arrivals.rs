@@ -1,3 +1,4 @@
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use mockito::{Mock, ServerGuard};
 use septa_api::{
     requests::{ArrivalsRequest, Direction},
@@ -144,8 +145,20 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
         arrival1.next_station,
         Some(RegionalRailStop::SuburbanStation)
     );
-    assert_eq!(arrival1.sched_time, "2023-04-11 18:30:00.000");
-    assert_eq!(arrival1.depart_time, "2023-04-11 18:30:00.000");
+    assert_eq!(
+        arrival1.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 30, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival1.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 30, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival1.track, "2");
     assert_eq!(arrival1.track_change, None);
     assert_eq!(arrival1.platform, "");
@@ -165,8 +178,20 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
         arrival2.next_station,
         Some(RegionalRailStop::TempleUniversity)
     );
-    assert_eq!(arrival2.sched_time, "2023-04-11 18:37:00.000");
-    assert_eq!(arrival2.depart_time, "2023-04-11 18:37:00.000");
+    assert_eq!(
+        arrival2.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 37, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival2.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 37, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival2.track, "1");
     assert_eq!(arrival2.track_change, None);
     assert_eq!(arrival2.platform, "");
@@ -186,8 +211,20 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
         arrival3.next_station,
         Some(RegionalRailStop::Gray30thStreet)
     );
-    assert_eq!(arrival3.sched_time, "2023-04-11 18:45:00.000");
-    assert_eq!(arrival3.depart_time, "2023-04-11 18:45:00.000");
+    assert_eq!(
+        arrival3.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 45, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival3.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 45, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival3.track, "1");
     assert_eq!(arrival3.track_change, None);
     assert_eq!(arrival3.platform, "");
@@ -207,8 +244,20 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
         arrival4.next_station,
         Some(RegionalRailStop::NorthPhiladelphia)
     );
-    assert_eq!(arrival4.sched_time, "2023-04-11 18:59:00.000");
-    assert_eq!(arrival4.depart_time, "2023-04-11 18:59:00.000");
+    assert_eq!(
+        arrival4.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 59, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival4.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 59, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival4.track, "2");
     assert_eq!(arrival4.track_change, None);
     assert_eq!(arrival4.platform, "");
@@ -225,8 +274,20 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival5.status, "1 min");
     assert_eq!(arrival5.service_type, ServiceType::Local);
     assert_eq!(arrival5.next_station, Some(RegionalRailStop::Secane));
-    assert_eq!(arrival5.sched_time, "2023-04-11 19:06:00.000");
-    assert_eq!(arrival5.depart_time, "2023-04-11 19:06:00.000");
+    assert_eq!(
+        arrival5.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(19, 6, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival5.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 11).unwrap(),
+            NaiveTime::from_hms_milli_opt(19, 6, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival5.track, "1");
     assert_eq!(arrival5.track_change, None);
     assert_eq!(arrival5.platform, "");
@@ -369,8 +430,20 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival1.status, "On Time");
     assert_eq!(arrival1.service_type, ServiceType::Local);
     assert_eq!(arrival1.next_station, None);
-    assert_eq!(arrival1.sched_time, "2023-04-12 18:26:00.000");
-    assert_eq!(arrival1.depart_time, "2023-04-12 18:26:00.000");
+    assert_eq!(
+        arrival1.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 26, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival1.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(18, 26, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival1.track, "1");
     assert_eq!(arrival1.track_change, None);
     assert_eq!(arrival1.platform, "");
@@ -387,8 +460,20 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival2.status, "On Time");
     assert_eq!(arrival2.service_type, ServiceType::Local);
     assert_eq!(arrival2.next_station, None);
-    assert_eq!(arrival2.sched_time, "2023-04-12 19:26:00.000");
-    assert_eq!(arrival2.depart_time, "2023-04-12 19:26:00.000");
+    assert_eq!(
+        arrival2.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(19, 26, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival2.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(19, 26, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival2.track, "1");
     assert_eq!(arrival2.track_change, None);
     assert_eq!(arrival2.platform, "");
@@ -405,8 +490,20 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival3.status, "On Time");
     assert_eq!(arrival3.service_type, ServiceType::Local);
     assert_eq!(arrival3.next_station, None);
-    assert_eq!(arrival3.sched_time, "2023-04-12 20:26:00.000");
-    assert_eq!(arrival3.depart_time, "2023-04-12 20:26:00.000");
+    assert_eq!(
+        arrival3.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(20, 26, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival3.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(20, 26, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival3.track, "1");
     assert_eq!(arrival3.track_change, None);
     assert_eq!(arrival3.platform, "");
@@ -423,8 +520,20 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival4.status, "On Time");
     assert_eq!(arrival4.service_type, ServiceType::Local);
     assert_eq!(arrival4.next_station, None);
-    assert_eq!(arrival4.sched_time, "2023-04-12 21:31:00.000");
-    assert_eq!(arrival4.depart_time, "2023-04-12 21:31:00.000");
+    assert_eq!(
+        arrival4.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(21, 31, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival4.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(21, 31, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival4.track, "1");
     assert_eq!(arrival4.track_change, None);
     assert_eq!(arrival4.platform, "");
@@ -441,8 +550,20 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival5.status, "On Time");
     assert_eq!(arrival5.service_type, ServiceType::Local);
     assert_eq!(arrival5.next_station, None);
-    assert_eq!(arrival5.sched_time, "2023-04-12 22:41:00.000");
-    assert_eq!(arrival5.depart_time, "2023-04-12 22:41:00.000");
+    assert_eq!(
+        arrival5.sched_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(22, 41, 0, 0).unwrap()
+        )
+    );
+    assert_eq!(
+        arrival5.depart_time,
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(2023, 4, 12).unwrap(),
+            NaiveTime::from_hms_milli_opt(22, 41, 0, 0).unwrap()
+        )
+    );
     assert_eq!(arrival5.track, "1");
     assert_eq!(arrival5.track_change, None);
     assert_eq!(arrival5.platform, "");

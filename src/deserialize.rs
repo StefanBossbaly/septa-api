@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use serde::de;
 use std::{collections::HashMap, fmt, str::FromStr};
 
@@ -126,5 +127,33 @@ impl<'a> de::Visitor<'a> for ApiErrorVisitor {
         }
 
         error.ok_or_else(|| de::Error::custom("expected an error"))
+    }
+}
+
+pub fn deserialize_naive_date_time<'a, D: de::Deserializer<'a>>(
+    deserializer: D,
+) -> Result<NaiveDateTime, D::Error> {
+    deserializer.deserialize_str(NaiveDateVisitor)
+}
+
+const DATE_FORMAT: &str = "%Y-%m-%d %H:%M:%S%.f";
+
+struct NaiveDateVisitor;
+
+impl<'a> de::Visitor<'a> for NaiveDateVisitor {
+    type Value = NaiveDateTime;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(formatter, "a trivially encoded date string")
+    }
+
+    fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
+        match NaiveDateTime::parse_from_str(value, DATE_FORMAT) {
+            Ok(date) => Ok(date),
+            Err(e) => Err(E::custom(format!(
+                "Error {} parsing timestamp {}",
+                e, value
+            ))),
+        }
     }
 }
