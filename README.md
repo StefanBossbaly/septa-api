@@ -16,7 +16,7 @@ developer to use the provided structures.
 | ---------------------------- | ----------- | ------ |
 | `/Arrivals/index.php`        | ✅          | ✅     |
 | `/TrainView/index.php`       | ✅          | ✅     |
-| `/NextToArrive/index.php`    | ❌          | ❌     |
+| `/NextToArrive/index.php`    | ✅          | ✅     |
 | `/TransitView/index.php`     | ❌          | ❌     |
 | `/TransitViewAll/index.php`  | ❌          | ❌     |
 | `/BusDetours/index.php`      | ❌          | ❌     |

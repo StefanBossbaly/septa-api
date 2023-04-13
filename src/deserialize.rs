@@ -1,4 +1,4 @@
-use chrono::NaiveDateTime;
+use chrono::{NaiveDateTime, NaiveTime};
 use serde::de;
 use std::{collections::HashMap, fmt, str::FromStr};
 
@@ -136,7 +136,7 @@ pub fn deserialize_naive_date_time<'a, D: de::Deserializer<'a>>(
     deserializer.deserialize_str(NaiveDateTimeVisitor)
 }
 
-const DATE_FORMAT: &str = "%Y-%m-%d %H:%M:%S%.f";
+const DATE_TIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S%.f";
 
 struct NaiveDateTimeVisitor;
 
@@ -148,12 +148,59 @@ impl<'a> de::Visitor<'a> for NaiveDateTimeVisitor {
     }
 
     fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
-        match NaiveDateTime::parse_from_str(value, DATE_FORMAT) {
+        match NaiveDateTime::parse_from_str(value, DATE_TIME_FORMAT) {
             Ok(date) => Ok(date),
             Err(e) => Err(E::custom(format!(
                 "Error {} parsing timestamp {}",
                 e, value
             ))),
+        }
+    }
+}
+
+pub fn deserialize_naive_time<'a, D: de::Deserializer<'a>>(
+    deserializer: D,
+) -> Result<NaiveTime, D::Error> {
+    deserializer.deserialize_str(NaiveTimeVisitor)
+}
+
+const TIME_FORMAT: &str = "%I:%M%p";
+
+struct NaiveTimeVisitor;
+
+impl<'a> de::Visitor<'a> for NaiveTimeVisitor {
+    type Value = NaiveTime;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(formatter, "a trivially encoded time string")
+    }
+
+    fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
+        match NaiveTime::parse_from_str(value, TIME_FORMAT) {
+            Ok(date) => Ok(date),
+            Err(e) => Err(E::custom(format!("Error {} parsing time {}", e, value))),
+        }
+    }
+}
+
+pub fn deserialize_bool<'a, D: de::Deserializer<'a>>(deserializer: D) -> Result<bool, D::Error> {
+    deserializer.deserialize_str(BoolStringVisitor)
+}
+
+struct BoolStringVisitor;
+
+impl<'a> de::Visitor<'a> for BoolStringVisitor {
+    type Value = bool;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(formatter, "a trivially encoded bool")
+    }
+
+    fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
+        match value.to_ascii_lowercase().as_str() {
+            "true" => Ok(true),
+            "false" => Ok(false),
+            _ => Err(de::Error::unknown_variant(value, &["true", "false"])),
         }
     }
 }

@@ -1,12 +1,13 @@
-use chrono::NaiveDateTime;
+use chrono::{NaiveDateTime, NaiveTime};
 use serde_derive::Deserialize;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 
 use crate::{
     deserialize::{
-        deserialize_api_error, deserialize_csv_encoded_string, deserialize_naive_date_time,
-        deserialize_optional_string_enum, deserialize_string_enum,
+        deserialize_api_error, deserialize_bool, deserialize_csv_encoded_string,
+        deserialize_naive_date_time, deserialize_naive_time, deserialize_optional_string_enum,
+        deserialize_string_enum,
     },
     types::{RegionalRailStop, RegionalRailsLine, ServiceType},
 };
@@ -141,4 +142,26 @@ pub struct Train {
 
     #[serde(rename = "TRACK_CHANGE")]
     pub track_change: String,
+}
+
+pub type NextToArriveApiResponse = ApiResponse<NextToArriveResponse>;
+pub type NextToArriveResponse = Vec<NextToArrive>;
+
+#[derive(Debug, Deserialize)]
+pub struct NextToArrive {
+    pub orig_train: String,
+
+    #[serde(deserialize_with = "deserialize_string_enum")]
+    pub orig_line: RegionalRailsLine,
+
+    #[serde(deserialize_with = "deserialize_naive_time")]
+    pub orig_departure_time: NaiveTime,
+
+    #[serde(deserialize_with = "deserialize_naive_time")]
+    pub orig_arrival_time: NaiveTime,
+
+    pub orig_delay: String,
+
+    #[serde(rename = "isdirect", deserialize_with = "deserialize_bool")]
+    pub is_direct: bool,
 }

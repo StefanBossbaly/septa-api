@@ -80,4 +80,11 @@ impl Client {
     pub async fn train_view(&self) -> Result<responses::TrainResponse> {
         self.get("/TrainView/index.php").await
     }
+
+    pub async fn next_to_arrive(
+        &self,
+        request: requests::NextToArriveRequest,
+    ) -> Result<responses::NextToArriveResponse> {
+        self.get_request("/NextToArrive/index.php", request).await
+    }
 }
