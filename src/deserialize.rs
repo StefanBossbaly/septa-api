@@ -133,14 +133,14 @@ impl<'a> de::Visitor<'a> for ApiErrorVisitor {
 pub fn deserialize_naive_date_time<'a, D: de::Deserializer<'a>>(
     deserializer: D,
 ) -> Result<NaiveDateTime, D::Error> {
-    deserializer.deserialize_str(NaiveDateVisitor)
+    deserializer.deserialize_str(NaiveDateTimeVisitor)
 }
 
 const DATE_FORMAT: &str = "%Y-%m-%d %H:%M:%S%.f";
 
-struct NaiveDateVisitor;
+struct NaiveDateTimeVisitor;
 
-impl<'a> de::Visitor<'a> for NaiveDateVisitor {
+impl<'a> de::Visitor<'a> for NaiveDateTimeVisitor {
     type Value = NaiveDateTime;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
