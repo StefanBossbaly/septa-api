@@ -187,6 +187,7 @@ pub enum RegionalRailStop {
     // Paoli/Thorndale Line Stops
     Thorndale,
     Downingtown,
+    Whitford,
     Exton,
     Malvern,
     Paoli,
@@ -194,6 +195,7 @@ pub enum RegionalRailStop {
     #[strum(serialize = "St. Davids")]
     StDavids,
     Berwyn,
+    Devon,
     Villanova,
     Strafford,
     Daylesford,
@@ -281,9 +283,14 @@ pub enum RegionalRailStop {
     )]
     Gray30thStreet,
     SuburbanStation,
+    #[strum(serialize = "Jefferson Station", serialize = "Jefferson")]
     JeffersonStation,
     #[strum(serialize = "Temple U", serialize = "Temple University")]
     TempleUniversity,
+    #[strum(
+        serialize = "Penn Medicine Station",
+        serialize = "Penn Medical Station"
+    )]
     PennMedicineStation,
 
     // Unknown Stop
