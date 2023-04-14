@@ -1,10 +1,6 @@
 use serde::de::DeserializeOwned;
 
-use crate::{
-    errors,
-    requests::{self, Request},
-    responses::{self, ApiResponse},
-};
+use crate::{errors, requests, responses};
 
 const BASE_API_URL: &str = "https://www3.septa.org/api";
 
@@ -40,7 +36,7 @@ impl Client {
             .get(url)
             .send()
             .await?
-            .json::<ApiResponse<R>>()
+            .json::<responses::ApiResponse<R>>()
             .await?;
 
         match response {
@@ -49,7 +45,7 @@ impl Client {
         }
     }
 
-    async fn get_request<T: Request, R: DeserializeOwned>(
+    async fn get_request<T: requests::Request, R: DeserializeOwned>(
         &self,
         endpoint: &str,
         request: T,
@@ -61,7 +57,7 @@ impl Client {
             .query(&request.into_params())
             .send()
             .await?
-            .json::<ApiResponse<R>>()
+            .json::<responses::ApiResponse<R>>()
             .await?;
 
         match response {
