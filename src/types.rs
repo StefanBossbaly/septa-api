@@ -18,12 +18,13 @@ pub enum ServiceType {
     Unknown(String),
 }
 
-#[derive(Debug, Deserialize, Display, EnumString, PartialEq)]
+#[derive(Debug, Deserialize, Display, EnumString, PartialEq, EnumCount, EnumIter)]
 #[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailsLine {
     Airport,
     ChestnutHillEast,
     ChestnutHillWest,
+    CenterCity,
     Cynwyd,
     FoxChase,
 
@@ -49,11 +50,12 @@ pub enum RegionalRailsLine {
 }
 
 impl RegionalRailsLine {
-    pub fn aberration(&self) -> &'static str {
+    pub fn id(&self) -> &'static str {
         match *self {
             Self::Airport => "AIR",
             Self::ChestnutHillEast => "CHE",
             Self::ChestnutHillWest => "CHW",
+            Self::CenterCity => "CC",
             Self::Cynwyd => "CYN",
             Self::FoxChase => "FOX",
             Self::LansdaleDoylestown => "LAN",

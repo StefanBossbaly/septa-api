@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use septa_api::types::RegionalRailStop;
+use septa_api::types::{RegionalRailStop, RegionalRailsLine};
 use strum::IntoEnumIterator;
 
 fn load_gtfs_rails() -> Result<gtfs_structures::Gtfs, gtfs_structures::Error> {
@@ -14,7 +14,28 @@ fn load_gtfs_rails() -> Result<gtfs_structures::Gtfs, gtfs_structures::Error> {
 }
 
 #[test]
-fn test_regional_rail_count_stops_test() -> Result<(), Box<dyn std::error::Error>> {
+fn test_regional_rail_line_ids_test() -> Result<(), Box<dyn std::error::Error>> {
+    let gtfs_rails = load_gtfs_rails()?;
+
+    assert_eq!(gtfs_rails.routes.len(), RegionalRailsLine::iter().count());
+
+    let gtfs_line_ids = gtfs_rails
+        .routes
+        .into_values()
+        .map(|route| route.id)
+        .collect::<BTreeSet<String>>();
+
+    let enum_line_ids = RegionalRailsLine::iter()
+        .map(|line| line.id().to_string())
+        .collect::<BTreeSet<String>>();
+
+    assert_eq!(gtfs_line_ids, enum_line_ids);
+
+    Ok(())
+}
+
+#[test]
+fn test_regional_rail_name_test() -> Result<(), Box<dyn std::error::Error>> {
     let gtfs_rails = load_gtfs_rails()?;
 
     assert_eq!(
@@ -23,13 +44,6 @@ fn test_regional_rail_count_stops_test() -> Result<(), Box<dyn std::error::Error
             .filter(|p| !matches!(p, RegionalRailStop::Unknown(_)))
             .count()
     );
-
-    Ok(())
-}
-
-#[test]
-fn test_regional_rail_name_test() -> Result<(), Box<dyn std::error::Error>> {
-    let gtfs_rails = load_gtfs_rails()?;
 
     let gtfs_stop_names = gtfs_rails
         .stops
