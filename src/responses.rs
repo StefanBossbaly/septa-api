@@ -31,7 +31,7 @@ pub struct ArrivalsResponse {
 }
 
 #[derive(Debug, Deserialize)]
-struct ArrivalsResponseBuilder(HashMap<String, Vec<HashMap<String, Vec<Arrivals>>>>);
+struct ArrivalsResponseBuilder(HashMap<String, Vec<serde_json::Value>>);
 
 impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
     type Error = String;
@@ -41,29 +41,39 @@ impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
             return Err(format!("expected 1 key, found {}", builder.0.len()));
         }
 
-        let (title, mut values) = builder.0.into_iter().next().unwrap();
+        let (title, values) = builder.0.into_iter().next().unwrap();
 
-        if values.len() != 1 {
-            return Err(format!("expected 1 value, found {}", values.len()));
+        match values.len() {
+            1 => {
+                let mut inner_values =
+                    serde_json::from_value::<HashMap<String, Vec<Arrivals>>>(values[0].clone())
+                        .map_err(|e| e.to_string())?;
+
+                let northbound = inner_values
+                    .get_mut("Northbound")
+                    .unwrap_or(&mut Vec::new())
+                    .drain(..)
+                    .collect();
+
+                let southbound = inner_values
+                    .get_mut("Southbound")
+                    .unwrap_or(&mut Vec::new())
+                    .drain(..)
+                    .collect();
+
+                Ok(ArrivalsResponse {
+                    title,
+                    northbound,
+                    southbound,
+                })
+            }
+            2 => Ok(ArrivalsResponse {
+                title,
+                northbound: Default::default(),
+                southbound: Default::default(),
+            }),
+            _ => Err("Array length must be 1 or 2".to_string()),
         }
-
-        let northbound = values[0]
-            .get_mut("Northbound")
-            .unwrap_or(&mut Vec::new())
-            .drain(..)
-            .collect();
-
-        let southbound = values[0]
-            .get_mut("Southbound")
-            .unwrap_or(&mut Vec::new())
-            .drain(..)
-            .collect();
-
-        Ok(ArrivalsResponse {
-            title,
-            northbound,
-            southbound,
-        })
     }
 }
 

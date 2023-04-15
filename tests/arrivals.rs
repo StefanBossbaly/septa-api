@@ -1,8 +1,8 @@
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use mockito::{Mock, ServerGuard};
 use septa_api::{
-    requests::{ArrivalsRequest, Direction},
-    types::{RegionalRailStop, RegionalRailsLine, ServiceType},
+    requests::{self, ArrivalsRequest, Direction},
+    types::{self, RegionalRailStop, RegionalRailsLine, ServiceType},
     Client,
 };
 
@@ -569,6 +569,35 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival5.platform, "");
     assert_eq!(arrival5.platform_change, None);
 
+    assert_eq!(arrival_response.southbound.len(), 0);
+
+    mock_server.assert_async().await;
+
+    Ok(())
+}
+
+#[tokio::test]
+async fn empty_deserialize_test() -> Result<(), septa_api::errors::Error> {
+    let mut server = mockito::Server::new();
+    let mock_server =
+        create_mock_server(&mut server, "/Arrivals/index.php?station=Temple+University")
+            .with_body(r#"{"Temple U Departures: April 15, 2023, 1:23 am":[[],[]]}"#)
+            .create_async()
+            .await;
+
+    let client = Client::with_base_url(server.url().as_str());
+    let arrivals_request = requests::ArrivalsRequest {
+        station: types::RegionalRailStop::TempleUniversity,
+        results: None,
+        direction: None,
+    };
+    let arrival_response = client.arrivals(arrivals_request).await?;
+
+    assert_eq!(
+        arrival_response.title,
+        "Temple U Departures: April 15, 2023, 1:23 am"
+    );
+    assert_eq!(arrival_response.northbound.len(), 0);
     assert_eq!(arrival_response.southbound.len(), 0);
 
     mock_server.assert_async().await;
