@@ -37,7 +37,6 @@ impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
     type Error = String;
 
     fn try_from(builder: ArrivalsResponseBuilder) -> Result<Self, Self::Error> {
-        dbg!(&builder.0);
         if builder.0.len() != 1 {
             return Err(format!("expected 1 key, found {}", builder.0.len()));
         }
