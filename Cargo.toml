@@ -21,3 +21,4 @@ strum = { version = "0.24", features = ["derive"] }
 [dev-dependencies]
 mockito = "1.0.0"
 tokio = { version = "1.26.0", features = ["full"] }
+gtfs-structures = "0.33.1"

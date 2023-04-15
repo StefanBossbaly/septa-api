@@ -1,5 +1,5 @@
 use serde_derive::Deserialize;
-use strum::{Display, EnumString};
+use strum::{Display, EnumCount, EnumIter, EnumString};
 
 pub enum TransportType {
     Bus,
@@ -72,13 +72,21 @@ impl RegionalRailsLine {
     }
 }
 
-#[derive(Debug, Deserialize, PartialEq, Display, EnumString)]
+#[derive(Debug, Deserialize, PartialEq, Display, EnumString, EnumCount, EnumIter)]
 #[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailStop {
     // Airport Line Stops
-    #[strum(serialize = "Airport Terminal E F", serialize = "Airport Terminal E-F")]
+    #[strum(
+        serialize = "Airport Terminal E F",
+        serialize = "Airport Terminal E-F",
+        to_string = "Airport Terminal E F"
+    )]
     AirportTerminalEF,
-    #[strum(serialize = "Airport Terminal C D", serialize = "Airport Terminal C-D")]
+    #[strum(
+        serialize = "Airport Terminal C D",
+        serialize = "Airport Terminal C-D",
+        to_string = "Airport Terminal C D"
+    )]
     AirportTerminalCD,
     #[strum(serialize = "Airport Terminal B")]
     AirportTerminalB,
@@ -167,6 +175,11 @@ pub enum RegionalRailStop {
     FortyNinthStreet,
 
     // Manayunk/Norristown Line Stops
+    #[strum(
+        serialize = "Norristown - Elm Street",
+        serialize = "Norristown Elm Street",
+        to_string = "Norristown - Elm Street"
+    )]
     NorristownElmStreet,
     MainStreet,
     #[strum(
@@ -197,10 +210,11 @@ pub enum RegionalRailStop {
     Berwyn,
     Devon,
     Villanova,
+    Rosemont,
+    BrynMawr,
     Strafford,
     Daylesford,
     Radnor,
-    BrynMawr,
     Haverford,
     Ardmore,
     Wynnewood,
@@ -241,6 +255,12 @@ pub enum RegionalRailStop {
     Eddystone,
     CrumLynne,
     RidleyPark,
+
+    #[strum(
+        serialize = "Prospect Park - Moore",
+        serialize = "Prospect Park Moore",
+        to_string = "Prospect Park - Moore"
+    )]
     ProspectParkMoore,
     Norwood,
     Glenolden,
@@ -278,8 +298,8 @@ pub enum RegionalRailStop {
         serialize = "30th Street Station",
         serialize = "30th St",
         serialize = "30th Street Gray",
-        serialize = "Gray 30th Street",
-        serialize = "Gray 30th St"
+        serialize = "Gray 30th St",
+        to_string = "Gray 30th Street"
     )]
     Gray30thStreet,
     SuburbanStation,
