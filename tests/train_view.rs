@@ -72,8 +72,8 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     let trains = client.train_view().await?;
 
     assert_eq!(trains.len(), 3);
-    assert_eq!(trains[0].lat, "39.954174265");
-    assert_eq!(trains[0].lon, "-75.16763361");
+    assert_eq!(trains[0].lat, 39.954174265);
+    assert_eq!(trains[0].lon, -75.16763361);
     assert_eq!(trains[0].train_number, "2333");
     assert_eq!(trains[0].service, ServiceType::Local);
     assert_eq!(trains[0].dest, RegionalRailStop::Wawa);
@@ -86,8 +86,8 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(trains[0].track, "");
     assert_eq!(trains[0].track_change, "");
 
-    assert_eq!(trains[1].lat, "40.200600166667");
-    assert_eq!(trains[1].lon, "-75.270441");
+    assert_eq!(trains[1].lat, 40.200600166667);
+    assert_eq!(trains[1].lon, -75.270441);
     assert_eq!(trains[1].train_number, "2530");
     assert_eq!(trains[1].service, ServiceType::Local);
     assert_eq!(trains[1].dest, RegionalRailStop::Lansdale);
@@ -100,8 +100,8 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(trains[1].track, "");
     assert_eq!(trains[1].track_change, "");
 
-    assert_eq!(trains[2].lat, "39.953094545");
-    assert_eq!(trains[2].lon, "-75.162311045");
+    assert_eq!(trains[2].lat, 39.953094545);
+    assert_eq!(trains[2].lon, -75.162311045);
     assert_eq!(trains[2].train_number, "3236");
     assert_eq!(trains[2].service, ServiceType::Local);
     assert_eq!(trains[2].dest, RegionalRailStop::NorristownTC);
@@ -135,8 +135,8 @@ async fn test_enpoint_rush_hour_async() -> Result<(), septa_api::errors::Error> 
     let trains = client.train_view().await?;
 
     assert_eq!(trains.len(), 40);
-    assert_eq!(trains[0].lat, "39.954848975");
-    assert_eq!(trains[0].lon, "-75.171935695");
+    assert_eq!(trains[0].lat, 39.954848975);
+    assert_eq!(trains[0].lon, -75.171935695);
     assert_eq!(trains[0].train_number, "1085");
     assert_eq!(trains[0].dest, RegionalRailStop::Cynwyd);
     assert_eq!(trains[0].current_stop, RegionalRailStop::SuburbanStation);

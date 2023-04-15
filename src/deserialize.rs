@@ -8,28 +8,6 @@ pub fn deserialize_csv_encoded_string<'a, D: de::Deserializer<'a>>(
     deserializer.deserialize_str(CsvEncodedStringVisitor)
 }
 
-pub fn deserialize_optional_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
-    deserializer: D,
-) -> Result<Option<T>, D::Error> {
-    deserializer.deserialize_option(OptionStringEnumVisitor {
-        _marker: Default::default(),
-    })
-}
-
-pub fn deserialize_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
-    deserializer: D,
-) -> Result<T, D::Error> {
-    deserializer.deserialize_str(StringEnumVisitor {
-        _marker: Default::default(),
-    })
-}
-
-pub fn deserialize_api_error<'a, D: de::Deserializer<'a>>(
-    deserializer: D,
-) -> Result<String, D::Error> {
-    deserializer.deserialize_seq(ApiErrorVisitor)
-}
-
 struct CsvEncodedStringVisitor;
 
 impl<'a> de::Visitor<'a> for CsvEncodedStringVisitor {
@@ -52,6 +30,14 @@ impl<'a> de::Visitor<'a> for CsvEncodedStringVisitor {
 
         Ok(result)
     }
+}
+
+pub fn deserialize_optional_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
+    deserializer: D,
+) -> Result<Option<T>, D::Error> {
+    deserializer.deserialize_option(OptionStringEnumVisitor {
+        _marker: Default::default(),
+    })
 }
 
 #[derive(Default)]
@@ -85,6 +71,14 @@ impl<'a, T: FromStr> de::Visitor<'a> for OptionStringEnumVisitor<'a, T> {
     }
 }
 
+pub fn deserialize_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
+    deserializer: D,
+) -> Result<T, D::Error> {
+    deserializer.deserialize_str(StringEnumVisitor {
+        _marker: Default::default(),
+    })
+}
+
 #[derive(Default)]
 struct StringEnumVisitor<'a, T: FromStr> {
     _marker: std::marker::PhantomData<&'a T>,
@@ -104,6 +98,12 @@ impl<'a, T: FromStr> de::Visitor<'a> for StringEnumVisitor<'a, T> {
 
         Ok(enum_value)
     }
+}
+
+pub fn deserialize_api_error<'a, D: de::Deserializer<'a>>(
+    deserializer: D,
+) -> Result<String, D::Error> {
+    deserializer.deserialize_seq(ApiErrorVisitor)
 }
 
 struct ApiErrorVisitor;
@@ -201,6 +201,30 @@ impl<'a> de::Visitor<'a> for BoolStringVisitor {
             "true" => Ok(true),
             "false" => Ok(false),
             _ => Err(de::Error::unknown_variant(value, &["true", "false"])),
+        }
+    }
+}
+
+pub fn deserialize_f64<'a, D: de::Deserializer<'a>>(deserializer: D) -> Result<f64, D::Error> {
+    deserializer.deserialize_str(F64StringVisitor)
+}
+
+struct F64StringVisitor;
+
+impl<'a> de::Visitor<'a> for F64StringVisitor {
+    type Value = f64;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(formatter, "a string encoded f64")
+    }
+
+    fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
+        match value.parse::<f64>() {
+            Ok(f) => Ok(f),
+            Err(e) => Err(de::Error::custom(format!(
+                "Error {} parsing f64 {}",
+                e, value
+            ))),
         }
     }
 }

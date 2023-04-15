@@ -5,7 +5,7 @@ use std::convert::TryFrom;
 
 use crate::{
     deserialize::{
-        deserialize_api_error, deserialize_bool, deserialize_csv_encoded_string,
+        deserialize_api_error, deserialize_bool, deserialize_csv_encoded_string, deserialize_f64,
         deserialize_naive_date_time, deserialize_naive_time, deserialize_optional_string_enum,
         deserialize_string_enum,
     },
@@ -105,8 +105,11 @@ pub type TrainResponse = Vec<Train>;
 
 #[derive(Debug, Deserialize)]
 pub struct Train {
-    pub lat: String,
-    pub lon: String,
+    #[serde(deserialize_with = "deserialize_f64")]
+    pub lat: f64,
+
+    #[serde(deserialize_with = "deserialize_f64")]
+    pub lon: f64,
 
     #[serde(rename = "trainno")]
     pub train_number: String,
