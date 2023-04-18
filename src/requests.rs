@@ -63,3 +63,13 @@ impl Request for NextToArriveRequest {
         params
     }
 }
+
+pub struct RailScheduleRequest {
+    pub train_number: String,
+}
+
+impl Request for RailScheduleRequest {
+    fn into_params(self) -> Vec<(&'static str, String)> {
+        vec![("req1", self.train_number)]
+    }
+}

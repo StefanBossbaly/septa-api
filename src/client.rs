@@ -83,4 +83,11 @@ impl Client {
     ) -> Result<responses::NextToArriveResponse> {
         self.get_request("/NextToArrive/index.php", request).await
     }
+
+    pub async fn rail_schedule(
+        &self,
+        request: requests::RailScheduleRequest,
+    ) -> Result<responses::RailScheduleResponse> {
+        self.get_request("/RRSchedules/index.php", request).await
+    }
 }

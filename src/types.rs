@@ -157,6 +157,7 @@ pub enum RegionalRailStop {
 
     // Media/Wawa Line Stops
     Wawa,
+    #[strum(serialize = "Elwyn", serialize = "Elwyn Station", to_string = "Elwyn")]
     Elwyn,
     Media,
     #[strum(serialize = "Moylan-Rose Valley")]

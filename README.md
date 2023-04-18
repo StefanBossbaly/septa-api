@@ -70,7 +70,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 | Endpoint                       | Implemented | Tested |
 | ------------------------------ | ----------- | ------ |
-| `/RRSchedules/index.php`       | ❌          | ❌     |
+| `/RRSchedules/index.php`       | ✅          | ✅     |
 | `/BusSchedules/index.php`      | ❌          | ❌     |
 | `/Stops/index.php`             | ❌          | ❌     |
 | `/locations/get_locations.php` | ❌          | ❌     |

@@ -6,7 +6,8 @@ use std::convert::TryFrom;
 use crate::{
     deserialize::{
         deserialize_api_error, deserialize_bool, deserialize_csv_encoded_string, deserialize_f64,
-        deserialize_naive_date_time, deserialize_naive_time, deserialize_optional_string_enum,
+        deserialize_naive_date_time, deserialize_naive_time, deserialize_naive_time_with_space,
+        deserialize_option_naive_time_with_space, deserialize_optional_string_enum,
         deserialize_string_enum,
     },
     types::{RegionalRailStop, RegionalRailsLine, ServiceType},
@@ -176,4 +177,31 @@ pub struct NextToArrive {
 
     #[serde(rename = "isdirect", deserialize_with = "deserialize_bool")]
     pub is_direct: bool,
+}
+
+pub type RailScheduleApiResponse = ApiResponse<RailScheduleResponse>;
+pub type RailScheduleResponse = Vec<RailSchedule>;
+
+#[derive(Debug, Deserialize)]
+pub struct RailSchedule {
+    #[serde(deserialize_with = "deserialize_string_enum")]
+    pub station: RegionalRailStop,
+
+    #[serde(
+        rename = "sched_tm",
+        deserialize_with = "deserialize_naive_time_with_space"
+    )]
+    pub scheduled_time: NaiveTime,
+
+    #[serde(
+        rename = "est_tm",
+        deserialize_with = "deserialize_naive_time_with_space"
+    )]
+    pub estimated_time: NaiveTime,
+
+    #[serde(
+        rename = "act_tm",
+        deserialize_with = "deserialize_option_naive_time_with_space"
+    )]
+    pub actual_time: Option<NaiveTime>,
 }

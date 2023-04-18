@@ -183,6 +183,64 @@ impl<'a> de::Visitor<'a> for NaiveTimeVisitor {
     }
 }
 
+pub fn deserialize_naive_time_with_space<'a, D: de::Deserializer<'a>>(
+    deserializer: D,
+) -> Result<NaiveTime, D::Error> {
+    deserializer.deserialize_str(NaiveTimeWithSpaceVisitor)
+}
+
+const TIME_FORMAT_WITH_SPACE: &str = "%I:%M %p";
+
+struct NaiveTimeWithSpaceVisitor;
+
+impl<'a> de::Visitor<'a> for NaiveTimeWithSpaceVisitor {
+    type Value = NaiveTime;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            formatter,
+            "an encoded time string with a space between the minutes and the AM/PM"
+        )
+    }
+
+    fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
+        match NaiveTime::parse_from_str(value, TIME_FORMAT_WITH_SPACE) {
+            Ok(date) => Ok(date),
+            Err(e) => Err(E::custom(format!("Error {} parsing time {}", e, value))),
+        }
+    }
+}
+
+pub fn deserialize_option_naive_time_with_space<'a, D: de::Deserializer<'a>>(
+    deserializer: D,
+) -> Result<Option<NaiveTime>, D::Error> {
+    deserializer.deserialize_str(OptionNaiveTimeWithSpaceVisitor)
+}
+
+struct OptionNaiveTimeWithSpaceVisitor;
+
+impl<'a> de::Visitor<'a> for OptionNaiveTimeWithSpaceVisitor {
+    type Value = Option<NaiveTime>;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            formatter,
+            "an encoded time string with a space between the minutes and the AM/PM or 'na'"
+        )
+    }
+
+    fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
+        if value == "na" {
+            Ok(None)
+        } else {
+            match NaiveTime::parse_from_str(value, TIME_FORMAT_WITH_SPACE) {
+                Ok(date) => Ok(Some(date)),
+                Err(e) => Err(E::custom(format!("Error {} parsing time {}", e, value))),
+            }
+        }
+    }
+}
+
 pub fn deserialize_bool<'a, D: de::Deserializer<'a>>(deserializer: D) -> Result<bool, D::Error> {
     deserializer.deserialize_str(BoolStringVisitor)
 }
