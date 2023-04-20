@@ -22,3 +22,12 @@ strum = { version = "0.24", features = ["derive"] }
 mockito = "1.0.0"
 tokio = { version = "1.26.0", features = ["full"] }
 gtfs-structures = "0.33.1"
+geojson = "0.24.0"
+
+[[example]]
+name = "client_example"
+crate-type = ["bin"]
+
+[[example]]
+name = "geojson_example"
+crate-type = ["bin"]

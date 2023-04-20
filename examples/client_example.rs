@@ -15,5 +15,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let arrivals = client.arrivals(arrivals_request).await?;
     dbg!(arrivals);
 
+    let rail_schedule = client
+        .rail_schedule(requests::RailScheduleRequest {
+            train_number: "3236".to_owned(),
+        })
+        .await?;
+    dbg!(rail_schedule);
+
     Ok(())
 }
