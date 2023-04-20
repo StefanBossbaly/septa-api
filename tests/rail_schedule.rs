@@ -278,6 +278,48 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
         Some(NaiveTime::from_hms_opt(21, 18, 0).unwrap())
     );
 
+    // Fifth Stop
+    assert_eq!(response[4].station, RegionalRailStop::Wallingford);
+    assert_eq!(
+        response[4].scheduled_time,
+        NaiveTime::from_hms_opt(21, 20, 0).unwrap()
+    );
+    assert_eq!(
+        response[4].estimated_time,
+        NaiveTime::from_hms_opt(21, 20, 0).unwrap()
+    );
+    assert_eq!(
+        response[4].actual_time,
+        Some(NaiveTime::from_hms_opt(21, 20, 0).unwrap())
+    );
+
+    // Sixth Stop
+    assert_eq!(response[5].station, RegionalRailStop::Swarthmore);
+    assert_eq!(
+        response[5].scheduled_time,
+        NaiveTime::from_hms_opt(21, 23, 0).unwrap()
+    );
+    assert_eq!(
+        response[5].estimated_time,
+        NaiveTime::from_hms_opt(21, 22, 0).unwrap()
+    );
+    assert_eq!(
+        response[5].actual_time,
+        Some(NaiveTime::from_hms_opt(21, 22, 0).unwrap())
+    );
+
+    // Last stop
+    assert_eq!(response[31].station, RegionalRailStop::NorristownElmStreet);
+    assert_eq!(
+        response[31].scheduled_time,
+        NaiveTime::from_hms_opt(22, 47, 0).unwrap()
+    );
+    assert_eq!(
+        response[31].estimated_time,
+        NaiveTime::from_hms_opt(22, 46, 0).unwrap()
+    );
+    assert_eq!(response[31].actual_time, None);
+
     mock_server.assert_async().await;
 
     Ok(())
