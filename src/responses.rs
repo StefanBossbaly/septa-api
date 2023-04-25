@@ -1,5 +1,5 @@
 use chrono::{NaiveDateTime, NaiveTime};
-use serde_derive::Deserialize;
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 

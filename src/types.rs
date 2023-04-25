@@ -1,4 +1,4 @@
-use serde_derive::Deserialize;
+use serde::Deserialize;
 use strum::{Display, EnumCount, EnumIter, EnumString};
 
 pub enum TransportType {
