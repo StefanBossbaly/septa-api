@@ -13,6 +13,7 @@ jobs:
         with:
           lfs: "true"
       - name: release-downloader
+        id: gtfs-release
         uses: robinraju/release-downloader@v1.7
         with:
           repository: septadev/GTFS
@@ -26,6 +27,9 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.0
         with:
-          path: |
-            ${{ github.workspace }}/tests/gtfs_data/septa_bus.zip
-            ${{ github.workspace }}/tests/gtfs_data/septa_rail.zip
+          add-paths: |
+            tests/gtfs_data/septa_bus.zip
+            tests/gtfs_data/septa_rail.zip
+          title: GTFS Data Update
+          body: Update SEPTA GTFS to ${{steps.gtfs-release.outputs.tag_name}}
+          commit-message: Update SEPTA GTFS to ${{steps.gtfs-release.outputs.tag_name}}
