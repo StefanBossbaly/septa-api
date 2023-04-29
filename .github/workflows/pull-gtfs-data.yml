@@ -27,5 +27,5 @@ jobs:
         uses: peter-evans/create-pull-request@v5.0.0
         with:
           path: |
-            ${GITHUB_WORKSPACE}/tests/gtfs_data/septa_bus.zip
-            ${GITHUB_WORKSPACE}/tests/gtfs_data/septa_rail.zip
+            ${{ github.workspace }}/tests/gtfs_data/septa_bus.zip
+            ${{ github.workspace }}/tests/gtfs_data/septa_rail.zip
