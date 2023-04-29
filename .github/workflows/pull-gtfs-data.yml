@@ -21,8 +21,8 @@ jobs:
       - name: Unzip artifacts and copy
         run: |
           unzip gtfs_public.zip
-          mv google_bus.zip tests/gtfs_data/septa_bus.zip
-          mv google_rail.zip tests/gtfs_data/septa_rail.zip
+          mv google_bus.zip ${{ github.workspace }}/tests/gtfs_data/septa_bus.zip
+          mv google_rail.zip ${{ github.workspace }}/tests/gtfs_data/septa_rail.zip
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5.0.0
         with:
