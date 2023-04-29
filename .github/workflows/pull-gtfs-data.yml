@@ -30,6 +30,8 @@ jobs:
           add-paths: |
             tests/gtfs_data/septa_bus.zip
             tests/gtfs_data/septa_rail.zip
-          title: GTFS Data Update
+          title: GTFS Data Update to ${{steps.gtfs-release.outputs.tag_name}}
           body: Update SEPTA GTFS to ${{steps.gtfs-release.outputs.tag_name}}
           commit-message: Update SEPTA GTFS to ${{steps.gtfs-release.outputs.tag_name}}
+          branch: gtfs-update-to-${{steps.gtfs-release.outputs.tag_name}}
+          delete-branch: true
