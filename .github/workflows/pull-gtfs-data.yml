@@ -1,0 +1,31 @@
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  
+name: Create a PR on new GTFS release
+
+jobs:
+  check-gtfs-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: 'true'
+      - name: release-downloader
+        uses: robinraju/release-downloader@v1.7
+        with:
+          repository: septadev/GTFS
+          fileName: gtfs_public.zip
+      - name: Unzip artifacts and copy
+        run: |
+          unzip gtfs_public.zip
+          mv google_bus.zip tests/gtfs_data/septa_bus.zip
+          mv google_rail.zip tests/gtfs_data/septa_rail.zip
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5.0.0
+        with:
+          path: |
+            tests/gtfs_data/septa_bus.zip
+            tests/gtfs_data/septa_rail.zip
+          
