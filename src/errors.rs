@@ -5,6 +5,7 @@ pub enum Error {
     RequestFailed(reqwest::Error),
     DeserializeFailed(serde_json::error::Error),
     ApiErrorResponse(String),
+    UnknownRegionalRailStation(String),
 }
 
 impl std::error::Error for Error {}
@@ -20,6 +21,9 @@ impl fmt::Display for Error {
             }
             Self::ApiErrorResponse(e) => {
                 write!(f, "API returned an error response: {}", e)
+            }
+            Self::UnknownRegionalRailStation(e) => {
+                write!(f, "Unknown regional rail station: {}", e)
             }
         }
     }
