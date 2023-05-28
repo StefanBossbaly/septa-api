@@ -1,27 +1,33 @@
+#[macro_use]
+extern crate lazy_static;
+
 use septa_api::types::{RegionalRailStop, RegionalRailsLine};
 use std::collections::{BTreeMap, BTreeSet};
 use strum::IntoEnumIterator;
 
-fn load_gtfs_rails() -> Result<gtfs_structures::Gtfs, gtfs_structures::Error> {
-    gtfs_structures::Gtfs::new(
-        format!(
-            "{}/tests/gtfs_data/septa_rail.zip",
-            env!("CARGO_MANIFEST_DIR")
+lazy_static! {
+    static ref GTFS_DATA: gtfs_structures::Gtfs = {
+        gtfs_structures::Gtfs::new(
+            format!(
+                "{}/tests/gtfs_data/septa_rail.zip",
+                env!("CARGO_MANIFEST_DIR")
+            )
+            .as_str(),
         )
-        .as_str(),
-    )
+        .expect("Could not load GTFS data")
+    };
 }
 
 #[test]
 fn test_regional_rail_line_ids_test() -> Result<(), Box<dyn std::error::Error>> {
-    let gtfs_rails = load_gtfs_rails()?;
+    let gtfs_rails = &GTFS_DATA;
 
     assert_eq!(gtfs_rails.routes.len(), RegionalRailsLine::iter().count());
 
     let gtfs_line_ids = gtfs_rails
         .routes
-        .into_values()
-        .map(|route| route.id)
+        .values()
+        .map(|route| route.id.clone())
         .collect::<BTreeSet<String>>();
 
     let enum_line_ids = RegionalRailsLine::iter()
@@ -35,7 +41,7 @@ fn test_regional_rail_line_ids_test() -> Result<(), Box<dyn std::error::Error>> 
 
 #[test]
 fn test_regional_rail_name_test() -> Result<(), Box<dyn std::error::Error>> {
-    let gtfs_rails = load_gtfs_rails()?;
+    let gtfs_rails = &GTFS_DATA;
 
     assert_eq!(
         gtfs_rails.stops.len(),
@@ -46,7 +52,7 @@ fn test_regional_rail_name_test() -> Result<(), Box<dyn std::error::Error>> {
 
     let gtfs_stop_names = gtfs_rails
         .stops
-        .into_values()
+        .values()
         .map(|stop| stop.name.to_string())
         .collect::<BTreeSet<String>>();
 
@@ -64,11 +70,11 @@ fn test_regional_rail_name_test() -> Result<(), Box<dyn std::error::Error>> {
 
 #[test]
 fn test_regional_rail_lat_long_test() -> Result<(), Box<dyn std::error::Error>> {
-    let gtfs_rails = load_gtfs_rails()?;
+    let gtfs_rails = &GTFS_DATA;
 
     let gtfs_stop_names_to_lat_long = gtfs_rails
         .stops
-        .into_values()
+        .values()
         .map(|stop| {
             (
                 stop.name.to_string(),
@@ -95,11 +101,11 @@ fn test_regional_rail_lat_long_test() -> Result<(), Box<dyn std::error::Error>> 
 
 #[test]
 fn test_regional_rail_stop_id_test() -> Result<(), Box<dyn std::error::Error>> {
-    let gtfs_rails = load_gtfs_rails()?;
+    let gtfs_rails = &GTFS_DATA;
 
     let gtfs_stop_names_to_stop_id = gtfs_rails
         .stops
-        .into_values()
+        .values()
         .map(|stop| (stop.name.to_string(), stop.id.parse::<u32>().unwrap()))
         .collect::<BTreeMap<String, u32>>();
 
