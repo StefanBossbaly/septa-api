@@ -2,6 +2,20 @@ use crate::errors::Error;
 use serde::Deserialize;
 use strum::{Display, EnumCount, EnumIter, EnumString};
 
+#[derive(
+    Clone,
+    Debug,
+    Deserialize,
+    Display,
+    EnumString,
+    EnumCount,
+    EnumIter,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+)]
 pub enum TransportType {
     Bus,
     RegionalRail,
@@ -9,7 +23,21 @@ pub enum TransportType {
     Subway,
     Trolley,
 }
-#[derive(Debug, Deserialize, Display, EnumString, PartialEq)]
+
+#[derive(
+    Clone,
+    Debug,
+    Deserialize,
+    Display,
+    EnumString,
+    EnumCount,
+    EnumIter,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+)]
 #[strum(serialize_all = "UPPERCASE")]
 pub enum ServiceType {
     Express,
@@ -19,7 +47,20 @@ pub enum ServiceType {
     Unknown(String),
 }
 
-#[derive(Debug, Deserialize, Display, EnumString, PartialEq, EnumCount, EnumIter)]
+#[derive(
+    Clone,
+    Debug,
+    Deserialize,
+    Display,
+    EnumString,
+    EnumCount,
+    EnumIter,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+)]
 #[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailsLine {
     Airport,
@@ -652,7 +693,20 @@ impl RegionalRailStop {
     }
 }
 
-#[derive(Debug, Deserialize, PartialEq, Display, EnumString)]
+#[derive(
+    Clone,
+    Debug,
+    Deserialize,
+    Display,
+    EnumString,
+    EnumCount,
+    EnumIter,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+)]
 pub enum NhslStop {
     #[strum(serialize = "Norristown Transportation Center - NHSL")]
     NorristownTransportationCenter,
