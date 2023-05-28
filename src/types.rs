@@ -116,7 +116,20 @@ impl RegionalRailsLine {
     }
 }
 
-#[derive(Debug, Deserialize, PartialEq, Display, EnumString, EnumCount, EnumIter)]
+#[derive(
+    Clone,
+    Debug,
+    Deserialize,
+    Display,
+    EnumString,
+    EnumCount,
+    EnumIter,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+)]
 #[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailStop {
     // Airport Line Stops
