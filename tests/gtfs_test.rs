@@ -92,3 +92,29 @@ fn test_regional_rail_lat_long_test() -> Result<(), Box<dyn std::error::Error>> 
 
     Ok(())
 }
+
+#[test]
+fn test_regional_rail_stop_id_test() -> Result<(), Box<dyn std::error::Error>> {
+    let gtfs_rails = load_gtfs_rails()?;
+
+    let gtfs_stop_names_to_stop_id = gtfs_rails
+        .stops
+        .into_values()
+        .map(|stop| (stop.name.to_string(), stop.id.parse::<u32>().unwrap()))
+        .collect::<BTreeMap<String, u32>>();
+
+    let enum_stop_names_to_stop_id = RegionalRailStop::iter()
+        .filter(|p| !matches!(p, RegionalRailStop::Unknown(_)))
+        .map(|stop| (stop.to_string(), stop.stop_id().unwrap()))
+        .collect::<BTreeMap<String, u32>>();
+
+    for (gtfs_itr, enum_itr) in gtfs_stop_names_to_stop_id
+        .into_iter()
+        .zip(enum_stop_names_to_stop_id)
+    {
+        assert_eq!(gtfs_itr.0, enum_itr.0);
+        assert_eq!(gtfs_itr.1, enum_itr.1);
+    }
+
+    Ok(())
+}
