@@ -6,6 +6,7 @@ const BASE_API_URL: &str = "https://www3.septa.org/api";
 
 pub type Result<T> = std::result::Result<T, errors::Error>;
 
+#[derive(Debug, Clone)]
 pub struct Client {
     base_url: String,
 }
