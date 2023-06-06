@@ -1,6 +1,7 @@
 use geojson::{feature, Feature, FeatureCollection, Geometry, Value};
-use septa_api::Client;
+use septa_api::{types::RegionalRailStop, Client};
 use std::{env, fs::File, io::Write};
+use strum::IntoEnumIterator;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -19,6 +20,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             properties: None,
             foreign_members: None,
         });
+    }
+
+    for station in RegionalRailStop::iter().filter(|p| !matches!(p, RegionalRailStop::Unknown(_))) {
+        let lat_lon = station.lat_lon()?;
+
+        features.push(Feature {
+            bbox: None,
+            geometry: Some(Geometry::new(Value::Point(vec![lat_lon.1, lat_lon.0]))),
+            id: Some(feature::Id::String(station.to_string())),
+            properties: None,
+            foreign_members: None,
+        })
     }
 
     let gtfs_rails = gtfs_structures::Gtfs::new(
