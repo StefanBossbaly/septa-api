@@ -1,6 +1,5 @@
-use serde::de::DeserializeOwned;
-
 use crate::{errors, requests, responses};
+use serde::de::DeserializeOwned;
 
 const BASE_API_URL: &str = "https://www3.septa.org/api";
 

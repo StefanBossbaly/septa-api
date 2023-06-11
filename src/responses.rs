@@ -1,7 +1,6 @@
 use chrono::{NaiveDateTime, NaiveTime};
 use serde::Deserialize;
-use std::collections::HashMap;
-use std::convert::TryFrom;
+use std::{collections::HashMap, convert::TryFrom};
 
 use crate::{
     deserialize::{
@@ -23,7 +22,7 @@ pub enum ApiResponse<T> {
 
 pub type ArrivalsApiResponse = ApiResponse<ArrivalsResponse>;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(try_from = "ArrivalsResponseBuilder")]
 pub struct ArrivalsResponse {
     pub title: String,
@@ -78,7 +77,7 @@ impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Arrivals {
     pub direction: String,
     pub path: String,
@@ -114,7 +113,7 @@ pub struct Arrivals {
 pub type TrainApiResponse = ApiResponse<TrainResponse>;
 pub type TrainResponse = Vec<Train>;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Train {
     #[serde(deserialize_with = "deserialize_f64")]
     pub lat: f64,
@@ -160,7 +159,7 @@ pub struct Train {
 pub type NextToArriveApiResponse = ApiResponse<NextToArriveResponse>;
 pub type NextToArriveResponse = Vec<NextToArrive>;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct NextToArrive {
     pub orig_train: String,
 
@@ -182,7 +181,7 @@ pub struct NextToArrive {
 pub type RailScheduleApiResponse = ApiResponse<RailScheduleResponse>;
 pub type RailScheduleResponse = Vec<RailSchedule>;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct RailSchedule {
     #[serde(deserialize_with = "deserialize_string_enum")]
     pub station: RegionalRailStop,
