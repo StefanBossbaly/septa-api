@@ -66,7 +66,6 @@ pub enum RegionalRailsLine {
     Airport,
     ChestnutHillEast,
     ChestnutHillWest,
-    CenterCity,
     Cynwyd,
     FoxChase,
 
@@ -97,7 +96,6 @@ impl RegionalRailsLine {
             Self::Airport => "AIR",
             Self::ChestnutHillEast => "CHE",
             Self::ChestnutHillWest => "CHW",
-            Self::CenterCity => "CC",
             Self::Cynwyd => "CYN",
             Self::FoxChase => "FOX",
             Self::LansdaleDoylestown => "LAN",
