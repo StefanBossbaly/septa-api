@@ -43,37 +43,46 @@ impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
 
         let (title, values) = builder.0.into_iter().next().unwrap();
 
-        match values.len() {
-            1 => {
-                let mut inner_values =
-                    serde_json::from_value::<HashMap<String, Vec<Arrivals>>>(values[0].clone())
-                        .map_err(|e| e.to_string())?;
+        let mut northbound = None;
+        let mut southbound = None;
 
-                let northbound = inner_values
-                    .get_mut("Northbound")
-                    .unwrap_or(&mut Vec::new())
-                    .drain(..)
-                    .collect();
-
-                let southbound = inner_values
-                    .get_mut("Southbound")
-                    .unwrap_or(&mut Vec::new())
-                    .drain(..)
-                    .collect();
-
-                Ok(ArrivalsResponse {
-                    title,
-                    northbound,
-                    southbound,
-                })
+        for value in values.into_iter() {
+            // SEPTA's API is inconsistent and will return an empty array when the are
+            // no results.
+            if let Ok(result) = serde_json::from_value::<Vec<serde_json::Value>>(value.clone()) {
+                match result.len() {
+                    0 => continue,
+                    _ => {
+                        return Err("Unknown response".to_string());
+                    }
+                }
             }
-            2 => Ok(ArrivalsResponse {
-                title,
-                northbound: Default::default(),
-                southbound: Default::default(),
-            }),
-            _ => Err("Array length must be 1 or 2".to_string()),
+
+            let mut inner_values = serde_json::from_value::<HashMap<String, Vec<Arrivals>>>(value)
+                .map_err(|e| e.to_string())?;
+
+            if let Some(northbound_values) = inner_values.remove("Northbound") {
+                if northbound.is_some() {
+                    return Err("Found two northbound key values".to_string());
+                }
+
+                northbound = Some(northbound_values);
+            }
+
+            if let Some(southbound_values) = inner_values.remove("Southbound") {
+                if southbound.is_some() {
+                    return Err("Found two southbound key values".to_string());
+                }
+
+                southbound = Some(southbound_values);
+            }
         }
+
+        Ok(ArrivalsResponse {
+            title,
+            northbound: northbound.unwrap_or(Vec::new()),
+            southbound: southbound.unwrap_or(Vec::new()),
+        })
     }
 }
 

@@ -577,6 +577,45 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
 }
 
 #[tokio::test]
+async fn test_deserialize3_async() -> Result<(), septa_api::errors::Error> {
+    let mut server = mockito::Server::new();
+    let mock_server = create_mock_server(
+        &mut server,
+        "/Arrivals/index.php?station=Temple+University&results=2",
+    )
+    .with_body(
+        r#"{"Temple U Departures: June 14, 2023, 9:07 pm":[{"Northbound":[{"direction":"N","path":"R4N","train_id":"464","origin":"Airport Terminal E-F","destination":"Warminster","line":"Warminster","status":"On Time","service_type":"LOCAL","next_station":"Jefferson","sched_time":"2023-06-14 21:15:00.000","depart_time":"2023-06-14 21:15:00.000","track":"2","track_change":null,"platform":"","platform_change":null},{"direction":"N","path":"R2\/5N","train_id":"2530","origin":"Newark","destination":"Lansdale","line":"Lansdale\/Doylestown","status":"5 min","service_type":"LOCAL","next_station":"30th Street Gray","sched_time":"2023-06-14 21:18:00.000","depart_time":"2023-06-14 21:18:00.000","track":"1","track_change":null,"platform":"","platform_change":null}]},{"Southbound":[{"direction":"S","path":"R4S","train_id":"469","origin":"Warminster","destination":"Airport","line":"Airport","status":"On Time","service_type":"LOCAL","next_station":"Temple U","sched_time":"2023-06-14 21:13:00.000","depart_time":"2023-06-14 21:13:00.000","track":"3","track_change":null,"platform":"","platform_change":null},{"direction":"S","path":"R5S","train_id":"6535","origin":"Doylestown","destination":"30th St","line":"Lansdale\/Doylestown","status":"1 min","service_type":"LOCAL","next_station":"Jenkintown-Wyncote","sched_time":"2023-06-14 21:24:00.000","depart_time":"2023-06-14 21:24:00.000","track":"4","track_change":null,"platform":"","platform_change":null}]}]}"#,
+    )
+    .create_async()
+    .await;
+
+    let client = Client::with_base_url(server.url().as_str());
+    let arrivals_request = ArrivalsRequest {
+        station: RegionalRailStop::TempleUniversity,
+        results: Some(2),
+        direction: None,
+    };
+    let arrival_response = client.arrivals(arrivals_request).await?;
+
+    assert_eq!(
+        arrival_response.title,
+        "Temple U Departures: June 14, 2023, 9:07 pm"
+    );
+
+    assert_eq!(arrival_response.northbound.len(), 2);
+    assert_eq!(arrival_response.northbound[0].direction, "N");
+    assert_eq!(arrival_response.northbound[1].direction, "N");
+
+    assert_eq!(arrival_response.southbound.len(), 2);
+    assert_eq!(arrival_response.southbound[0].direction, "S");
+    assert_eq!(arrival_response.southbound[1].direction, "S");
+
+    mock_server.assert_async().await;
+
+    Ok(())
+}
+
+#[tokio::test]
 async fn empty_deserialize_test() -> Result<(), septa_api::errors::Error> {
     let mut server = mockito::Server::new();
     let mock_server =
