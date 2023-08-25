@@ -358,11 +358,8 @@ pub enum RegionalRailStop {
         to_string = "Gray 30th Street"
     )]
     Gray30thStreet,
-    
-    #[strum(
-        serialize = "30th St Lower Level",
-        to_string = "30th St Lower Level"
-    )]
+
+    #[strum(serialize = "30th St Lower Level", to_string = "30th St Lower Level")]
     ThirtyStreetLowerLevel,
     SuburbanStation,
     #[strum(serialize = "Jefferson Station", serialize = "Jefferson")]
@@ -552,7 +549,7 @@ impl RegionalRailStop {
             Self::Bala => Ok((40.0011111, -75.2277778)),
             Self::WynnefieldAvenue => Ok((39.9900000, -75.2255556)),
             Self::Gray30thStreet => Ok((39.9566667, -75.1816667)),
-            Self::ThirtyStreetLowerLevel => Ok((39.9591667,-75.1883333)),
+            Self::ThirtyStreetLowerLevel => Ok((39.9591667, -75.1883333)),
             Self::SuburbanStation => Ok((39.9538889, -75.1677778)),
             Self::JeffersonStation => Ok((39.9525000, -75.1580556)),
             Self::TempleUniversity => Ok((39.9813889, -75.1494444)),
