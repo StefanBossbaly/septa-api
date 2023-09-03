@@ -1,5 +1,10 @@
+use std::{fmt, str::FromStr};
+
 use crate::errors::Error;
-use serde::Deserialize;
+use serde::{
+    de::{self, Visitor},
+    Deserialize, Deserializer,
+};
 use strum::{Display, EnumCount, EnumIter, EnumString};
 
 #[derive(
@@ -115,18 +120,7 @@ impl RegionalRailsLine {
 }
 
 #[derive(
-    Clone,
-    Debug,
-    Deserialize,
-    Display,
-    EnumString,
-    EnumCount,
-    EnumIter,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
+    Clone, Debug, Display, EnumString, EnumCount, EnumIter, PartialEq, Eq, PartialOrd, Ord, Hash,
 )]
 #[strum(serialize_all = "title_case", ascii_case_insensitive)]
 pub enum RegionalRailStop {
@@ -375,6 +369,44 @@ pub enum RegionalRailStop {
     // Unknown Stop
     #[strum(default)]
     Unknown(String),
+}
+
+struct RegionalRailStopVisitor;
+
+impl<'de> Visitor<'de> for RegionalRailStopVisitor {
+    type Value = RegionalRailStop;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        formatter.write_str("Expecting a serialized SEPTA regional rail stop name")
+    }
+
+    fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        match RegionalRailStop::from_str(value) {
+            Ok(stop) => match stop {
+                RegionalRailStop::Unknown(stop_name) => Err(E::custom(format!(
+                    "Regional rail stop \"{}\" was not reconized",
+                    stop_name
+                ))),
+                _ => Ok(stop),
+            },
+            Err(e) => Err(E::custom(format!(
+                "Regional rail stop was not reconized becasue of error: {}",
+                e
+            ))),
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for RegionalRailStop {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_str(RegionalRailStopVisitor)
+    }
 }
 
 impl RegionalRailStop {

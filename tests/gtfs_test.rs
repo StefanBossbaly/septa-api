@@ -2,6 +2,7 @@
 extern crate lazy_static;
 
 use septa_api::types::{RegionalRailStop, RegionalRailsLine};
+use serde::{de::value::StrDeserializer, Deserialize};
 use std::collections::{BTreeMap, BTreeSet};
 use strum::IntoEnumIterator;
 
@@ -121,6 +122,19 @@ fn test_regional_rail_stop_id_test() -> Result<(), Box<dyn std::error::Error>> {
         assert_eq!(gtfs_itr.0, enum_itr.0);
         assert_eq!(gtfs_itr.1, enum_itr.1);
     }
+
+    Ok(())
+}
+
+#[test]
+fn test_deserialize_regional_rail() -> Result<(), Box<dyn std::error::Error>> {
+    let gtfs_rails = &GTFS_DATA;
+
+    gtfs_rails.stops.values().for_each(|stop| {
+        let deserializer: StrDeserializer<'_, serde_json::error::Error> =
+            StrDeserializer::new(&stop.name);
+        RegionalRailStop::deserialize(deserializer).unwrap();
+    });
 
     Ok(())
 }
