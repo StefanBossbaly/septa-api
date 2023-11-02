@@ -1,6 +1,10 @@
 name: Rust CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   test:
@@ -16,9 +20,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          lfs: "true"
+          lfs: true
 
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
