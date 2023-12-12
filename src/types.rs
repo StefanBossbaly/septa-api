@@ -363,6 +363,9 @@ pub enum RegionalRailStop {
     )]
     PennMedicineStation,
 
+    #[strum(serialize = "30th St Lower Level")]
+    Gray30thStreetLowerLevel,
+
     // Unknown Stop
     #[strum(default)]
     Unknown(String),
@@ -565,6 +568,7 @@ impl RegionalRailStop {
             Self::Cheltenham => Ok(90813),
             Self::Ryers => Ok(90814),
             Self::FoxChase => Ok(90815),
+            Self::Gray30thStreetLowerLevel => Ok(91004),
             Self::Unknown(ref station) => {
                 Err(Error::UnknownRegionalRailStation(station.to_string()))
             }
@@ -729,6 +733,7 @@ impl RegionalRailStop {
             Self::Cheltenham => Ok((40.0580556, -75.0927778)),
             Self::Ryers => Ok((40.0641667, -75.0863889)),
             Self::FoxChase => Ok((40.0763889, -75.0833333)),
+            Self::Gray30thStreetLowerLevel => Ok((39.9591667, -75.1883333)),
             Self::Unknown(ref station) => {
                 Err(Error::UnknownRegionalRailStation(station.to_string()))
             }
