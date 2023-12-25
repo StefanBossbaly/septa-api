@@ -21,7 +21,7 @@ strum = { version = "0.25", features = ["derive"] }
 [dev-dependencies]
 mockito = "1.2.0"
 tokio = { version = "1.33.0", features = ["full"] }
-gtfs-structures = "0.34.0"
+gtfs-structures = "0.39.0"
 geojson = "0.24.1"
 lazy_static = "1.4.0"
 
