@@ -12,7 +12,7 @@ fn create_mock_server(server: &mut ServerGuard, endpoint: &str) -> Mock {
 
 #[tokio::test]
 async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
-    let mut server = mockito::Server::new();
+    let mut server = mockito::Server::new_async().await;
     let mock_server = create_mock_server(
         &mut server,
         "/Arrivals/index.php?station=Temple+University&direction=N",
@@ -300,7 +300,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
 
 #[tokio::test]
 async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
-    let mut server = mockito::Server::new();
+    let mut server = mockito::Server::new_async().await;
     let mock_server = create_mock_server(
         &mut server,
         "/Arrivals/index.php?station=Malvern&direction=N",
@@ -578,7 +578,7 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
 
 #[tokio::test]
 async fn test_deserialize3_async() -> Result<(), septa_api::errors::Error> {
-    let mut server = mockito::Server::new();
+    let mut server = mockito::Server::new_async().await;
     let mock_server = create_mock_server(
         &mut server,
         "/Arrivals/index.php?station=Temple+University&results=2",
@@ -617,7 +617,7 @@ async fn test_deserialize3_async() -> Result<(), septa_api::errors::Error> {
 
 #[tokio::test]
 async fn empty_deserialize_test() -> Result<(), septa_api::errors::Error> {
-    let mut server = mockito::Server::new();
+    let mut server = mockito::Server::new_async().await;
     let mock_server =
         create_mock_server(&mut server, "/Arrivals/index.php?station=Temple+University")
             .with_body(r#"{"Temple U Departures: April 15, 2023, 1:23 am":[[],[]]}"#)

@@ -12,7 +12,7 @@ fn create_mock_server(server: &mut ServerGuard, endpoint: &str) -> Mock {
 
 #[tokio::test]
 async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
-    let mut server = mockito::Server::new();
+    let mut server = mockito::Server::new_async().await;
     let mock_server = create_mock_server(
         &mut server,
         "/NextToArrive/index.php?req1=Temple+University&req2=St.+Davids",

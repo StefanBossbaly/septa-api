@@ -54,7 +54,12 @@ fn test_regional_rail_name_test() -> Result<(), Box<dyn std::error::Error>> {
     let gtfs_stop_names = gtfs_rails
         .stops
         .values()
-        .map(|stop| stop.name.to_string())
+        .map(|stop| {
+            stop.name
+                .as_ref()
+                .expect("GTFS stop name should be populated")
+                .to_owned()
+        })
         .collect::<BTreeSet<String>>();
 
     let enum_stop_names = RegionalRailStop::iter()
@@ -78,8 +83,14 @@ fn test_regional_rail_lat_long_test() -> Result<(), Box<dyn std::error::Error>> 
         .values()
         .map(|stop| {
             (
-                stop.name.to_string(),
-                (stop.latitude.unwrap(), stop.longitude.unwrap()),
+                stop.name
+                    .as_ref()
+                    .expect("GTFS stop name should be populated")
+                    .to_owned(),
+                (
+                    stop.latitude.expect("GTFS latitude should be populated"),
+                    stop.longitude.expect("GTFS longitude should be populate"),
+                ),
             )
         })
         .collect::<BTreeMap<String, (f64, f64)>>();
@@ -107,7 +118,15 @@ fn test_regional_rail_stop_id_test() -> Result<(), Box<dyn std::error::Error>> {
     let gtfs_stop_names_to_stop_id = gtfs_rails
         .stops
         .values()
-        .map(|stop| (stop.name.to_string(), stop.id.parse::<u32>().unwrap()))
+        .map(|stop| {
+            (
+                stop.name
+                    .as_ref()
+                    .expect("GTFS stop name should be populated")
+                    .to_owned(),
+                stop.id.parse::<u32>().unwrap(),
+            )
+        })
         .collect::<BTreeMap<String, u32>>();
 
     let enum_stop_names_to_stop_id = RegionalRailStop::iter()
@@ -131,8 +150,11 @@ fn test_deserialize_regional_rail() -> Result<(), Box<dyn std::error::Error>> {
     let gtfs_rails = &GTFS_DATA;
 
     gtfs_rails.stops.values().for_each(|stop| {
-        let deserializer: StrDeserializer<'_, serde_json::error::Error> =
-            StrDeserializer::new(&stop.name);
+        let deserializer: StrDeserializer<'_, serde_json::error::Error> = StrDeserializer::new(
+            stop.name
+                .as_ref()
+                .expect("GTFS stop name should be populated"),
+        );
         RegionalRailStop::deserialize(deserializer).unwrap();
     });
 

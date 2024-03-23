@@ -10,7 +10,7 @@ fn create_mock_server(server: &mut ServerGuard, endpoint: &str) -> Mock {
 
 #[tokio::test]
 async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
-    let mut server = mockito::Server::new();
+    let mut server = mockito::Server::new_async().await;
     let mock_server = create_mock_server(&mut server, "/TrainView/index.php")
         .with_body(
             r#"
@@ -121,7 +121,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
 
 #[tokio::test]
 async fn test_enpoint_rush_hour_async() -> Result<(), septa_api::errors::Error> {
-    let mut server = mockito::Server::new();
+    let mut server = mockito::Server::new_async().await;
     let mock_server = create_mock_server(&mut server, "/TrainView/index.php")
     .with_body(
         r#"
@@ -150,7 +150,7 @@ async fn test_enpoint_rush_hour_async() -> Result<(), septa_api::errors::Error> 
 // This is an actual response I got from the API when it was down
 #[tokio::test]
 async fn test_api_down_test_async() -> Result<(), septa_api::errors::Error> {
-    let mut server = mockito::Server::new();
+    let mut server = mockito::Server::new_async().await;
     let mock_server = create_mock_server(&mut server, "/TrainView/index.php")
         .with_body(
         r#"
