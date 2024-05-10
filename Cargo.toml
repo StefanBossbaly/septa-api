@@ -17,6 +17,7 @@ reqwest = { version = "0.12.4", features = ["json"] }
 serde_json = "1.0.117"
 serde = { version = "1.0.201", features = ["derive"] }
 strum = { version = "0.26", features = ["derive"] }
+thiserror = "1.0.60"
 
 [dev-dependencies]
 mockito = "1.4.0"
