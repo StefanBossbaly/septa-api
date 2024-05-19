@@ -286,3 +286,27 @@ impl<'a> de::Visitor<'a> for F64StringVisitor {
         }
     }
 }
+
+pub fn deserialize_optional_f64<'a, D: de::Deserializer<'a>>(
+    deserializer: D,
+) -> Result<Option<f64>, D::Error> {
+    deserializer.deserialize_option(OptionF64StringVisitor)
+}
+
+struct OptionF64StringVisitor;
+
+impl<'a> de::Visitor<'a> for OptionF64StringVisitor {
+    type Value = Option<f64>;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(formatter, "a string encoded f64 or null")
+    }
+
+    fn visit_none<E: de::Error>(self) -> Result<Self::Value, E> {
+        Ok(None)
+    }
+
+    fn visit_some<D: de::Deserializer<'a>>(self, d: D) -> Result<Self::Value, D::Error> {
+        Ok(Some(d.deserialize_str(F64StringVisitor)?))
+    }
+}

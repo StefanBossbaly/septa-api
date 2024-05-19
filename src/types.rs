@@ -363,9 +363,6 @@ pub enum RegionalRailStop {
     )]
     PennMedicineStation,
 
-    #[strum(serialize = "30th St Lower Level")]
-    Gray30thStreetLowerLevel,
-
     // Unknown Stop
     #[strum(default)]
     Unknown(String),
@@ -568,7 +565,6 @@ impl RegionalRailStop {
             Self::Cheltenham => Ok(90813),
             Self::Ryers => Ok(90814),
             Self::FoxChase => Ok(90815),
-            Self::Gray30thStreetLowerLevel => Ok(91004),
             Self::Unknown(ref station) => {
                 Err(Error::UnknownRegionalRailStation(station.to_string()))
             }
@@ -589,7 +585,7 @@ impl RegionalRailStop {
             Self::Newark => Ok((39.6705556, -75.7527778)),
             Self::ChurchmansCrossing => Ok((39.6950000, -75.6725000)),
             Self::Wilmington => Ok((39.7372222, -75.5511111)),
-            Self::Claymont => Ok((39.7977778, -75.4522222)),
+            Self::Claymont => Ok((39.80429071, -75.44604643)),
             Self::MarcusHook => Ok((39.8216667, -75.4194444)),
             Self::HighlandAvenue => Ok((39.8336111, -75.3933333)),
             Self::Chester => Ok((39.8497222, -75.3600000)),
@@ -610,7 +606,7 @@ impl RegionalRailStop {
             Self::IvyRidge => Ok((40.0341667, -75.2355556)),
             Self::Miquon => Ok((40.0586111, -75.2663889)),
             Self::SpringMill => Ok((40.0741667, -75.2861111)),
-            Self::Conshohocken => Ok((40.0722222, -75.3086111)),
+            Self::Conshohocken => Ok((40.073009, -75.3105619)),
             Self::NorristownTC => Ok((40.1127778, -75.3441667)),
             Self::MainStreet => Ok((40.1172222, -75.3486111)),
             Self::NorristownElmStreet => Ok((40.1208333, -75.3450000)),
@@ -733,7 +729,6 @@ impl RegionalRailStop {
             Self::Cheltenham => Ok((40.0580556, -75.0927778)),
             Self::Ryers => Ok((40.0641667, -75.0863889)),
             Self::FoxChase => Ok((40.0763889, -75.0833333)),
-            Self::Gray30thStreetLowerLevel => Ok((39.9591667, -75.1883333)),
             Self::Unknown(ref station) => {
                 Err(Error::UnknownRegionalRailStation(station.to_string()))
             }
