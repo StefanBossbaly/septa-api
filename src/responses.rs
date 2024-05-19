@@ -6,8 +6,8 @@ use crate::{
     deserialize::{
         deserialize_api_error, deserialize_bool, deserialize_csv_encoded_string, deserialize_f64,
         deserialize_naive_date_time, deserialize_naive_time, deserialize_naive_time_with_space,
-        deserialize_option_naive_time_with_space, deserialize_optional_string_enum,
-        deserialize_string_enum,
+        deserialize_option_naive_time_with_space, deserialize_optional_f64,
+        deserialize_optional_string_enum, deserialize_string_enum,
     },
     types::{RegionalRailStop, RegionalRailsLine, ServiceType},
 };
@@ -151,6 +151,7 @@ pub struct Train {
     #[serde(deserialize_with = "deserialize_csv_encoded_string")]
     pub consist: Vec<i32>,
 
+    #[serde(deserialize_with = "deserialize_optional_f64")]
     pub heading: Option<f64>,
 
     pub late: i32,

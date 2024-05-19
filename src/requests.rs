@@ -10,11 +10,11 @@ pub enum Direction {
     South,
 }
 
-impl ToString for Direction {
-    fn to_string(&self) -> String {
+impl std::fmt::Display for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match *self {
-            Self::North => "N".to_string(),
-            Self::South => "S".to_string(),
+            Self::North => write!(f, "N"),
+            Self::South => write!(f, "S"),
         }
     }
 }
