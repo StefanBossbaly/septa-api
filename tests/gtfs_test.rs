@@ -1,39 +1,35 @@
-#[macro_use]
-extern crate lazy_static;
+use std::collections::{BTreeMap, BTreeSet};
 
 use septa_api::types::{RegionalRailStop, RegionalRailsLine};
 use serde::{de::value::StrDeserializer, Deserialize};
-use std::collections::{BTreeMap, BTreeSet};
 use strum::IntoEnumIterator;
+use once_cell::sync::Lazy;
 
-lazy_static! {
-    static ref GTFS_DATA: gtfs_structures::Gtfs = {
-        gtfs_structures::Gtfs::new(
-            format!(
-                "{}/tests/gtfs_data/septa_rail.zip",
-                env!("CARGO_MANIFEST_DIR")
-            )
-            .as_str(),
+static GTFS_DATA: Lazy<gtfs_structures::Gtfs> = Lazy::new(|| {
+    gtfs_structures::Gtfs::new(
+        format!(
+            "{}/tests/gtfs_data/septa_rail.zip",
+            env!("CARGO_MANIFEST_DIR")
         )
-        .expect("Could not load GTFS data")
-    };
-}
+        .as_str(),
+    )
+    .expect("Could not load GTFS data")
+});
 
 #[test]
 fn test_regional_rail_line_ids_test() -> Result<(), Box<dyn std::error::Error>> {
     let gtfs_rails = &GTFS_DATA;
-
-    assert_eq!(gtfs_rails.routes.len(), RegionalRailsLine::iter().count());
+    assert_eq!(GTFS_DATA.routes.len(), RegionalRailsLine::iter().count());
 
     let gtfs_line_ids = gtfs_rails
         .routes
         .values()
-        .map(|route| route.id.clone())
-        .collect::<BTreeSet<String>>();
+        .map(|route| route.id.as_str())
+        .collect::<BTreeSet<&str>>();
 
     let enum_line_ids = RegionalRailsLine::iter()
-        .map(|line| line.id().to_string())
-        .collect::<BTreeSet<String>>();
+        .map(|line| line.id())
+        .collect::<BTreeSet<&str>>();
 
     assert_eq!(gtfs_line_ids, enum_line_ids);
 
@@ -58,9 +54,9 @@ fn test_regional_rail_name_test() -> Result<(), Box<dyn std::error::Error>> {
             stop.name
                 .as_ref()
                 .expect("GTFS stop name should be populated")
-                .to_owned()
+                .as_str()
         })
-        .collect::<BTreeSet<String>>();
+        .collect::<BTreeSet<&str>>();
 
     let enum_stop_names = RegionalRailStop::iter()
         .filter(|p| !matches!(p, RegionalRailStop::Unknown(_)))
@@ -86,18 +82,18 @@ fn test_regional_rail_lat_long_test() -> Result<(), Box<dyn std::error::Error>> 
                 stop.name
                     .as_ref()
                     .expect("GTFS stop name should be populated")
-                    .to_owned(),
+                    .as_str(),
                 (
                     stop.latitude.expect("GTFS latitude should be populated"),
                     stop.longitude.expect("GTFS longitude should be populate"),
                 ),
             )
         })
-        .collect::<BTreeMap<String, (f64, f64)>>();
+        .collect::<BTreeMap<&str, (f64, f64)>>();
 
     let enum_stop_names_to_lat_long = RegionalRailStop::iter()
         .filter(|p| !matches!(p, RegionalRailStop::Unknown(_)))
-        .map(|stop| (stop.to_string(), stop.lat_lon().unwrap()))
+        .map(|stop| (stop.to_string(), stop.lat_lon().expect("Lat/Long should be populated")))
         .collect::<BTreeMap<String, (f64, f64)>>();
 
     for (gtfs_itr, enum_itr) in gtfs_stop_names_to_lat_long
@@ -123,15 +119,15 @@ fn test_regional_rail_stop_id_test() -> Result<(), Box<dyn std::error::Error>> {
                 stop.name
                     .as_ref()
                     .expect("GTFS stop name should be populated")
-                    .to_owned(),
-                stop.id.parse::<u32>().unwrap(),
+                    .as_str(),
+                stop.id.parse::<u32>().expect("GTFS stop id should be a u32"),
             )
         })
-        .collect::<BTreeMap<String, u32>>();
+        .collect::<BTreeMap<&str, u32>>();
 
     let enum_stop_names_to_stop_id = RegionalRailStop::iter()
         .filter(|p| !matches!(p, RegionalRailStop::Unknown(_)))
-        .map(|stop| (stop.to_string(), stop.stop_id().unwrap()))
+        .map(|stop| (stop.to_string(), stop.stop_id().expect("stop id should be populated")))
         .collect::<BTreeMap<String, u32>>();
 
     for (gtfs_itr, enum_itr) in gtfs_stop_names_to_stop_id
@@ -155,7 +151,7 @@ fn test_deserialize_regional_rail() -> Result<(), Box<dyn std::error::Error>> {
                 .as_ref()
                 .expect("GTFS stop name should be populated"),
         );
-        RegionalRailStop::deserialize(deserializer).unwrap();
+        RegionalRailStop::deserialize(deserializer).expect("Could not deserialize stop name");
     });
 
     Ok(())
