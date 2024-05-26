@@ -1,9 +1,9 @@
 use std::collections::{BTreeMap, BTreeSet};
 
+use once_cell::sync::Lazy;
 use septa_api::types::{RegionalRailStop, RegionalRailsLine};
 use serde::{de::value::StrDeserializer, Deserialize};
 use strum::IntoEnumIterator;
-use once_cell::sync::Lazy;
 
 static GTFS_DATA: Lazy<gtfs_structures::Gtfs> = Lazy::new(|| {
     gtfs_structures::Gtfs::new(
@@ -93,7 +93,12 @@ fn test_regional_rail_lat_long_test() -> Result<(), Box<dyn std::error::Error>> 
 
     let enum_stop_names_to_lat_long = RegionalRailStop::iter()
         .filter(|p| !matches!(p, RegionalRailStop::Unknown(_)))
-        .map(|stop| (stop.to_string(), stop.lat_lon().expect("Lat/Long should be populated")))
+        .map(|stop| {
+            (
+                stop.to_string(),
+                stop.lat_lon().expect("Lat/Long should be populated"),
+            )
+        })
         .collect::<BTreeMap<String, (f64, f64)>>();
 
     for (gtfs_itr, enum_itr) in gtfs_stop_names_to_lat_long
@@ -120,14 +125,21 @@ fn test_regional_rail_stop_id_test() -> Result<(), Box<dyn std::error::Error>> {
                     .as_ref()
                     .expect("GTFS stop name should be populated")
                     .as_str(),
-                stop.id.parse::<u32>().expect("GTFS stop id should be a u32"),
+                stop.id
+                    .parse::<u32>()
+                    .expect("GTFS stop id should be a u32"),
             )
         })
         .collect::<BTreeMap<&str, u32>>();
 
     let enum_stop_names_to_stop_id = RegionalRailStop::iter()
         .filter(|p| !matches!(p, RegionalRailStop::Unknown(_)))
-        .map(|stop| (stop.to_string(), stop.stop_id().expect("stop id should be populated")))
+        .map(|stop| {
+            (
+                stop.to_string(),
+                stop.stop_id().expect("stop id should be populated"),
+            )
+        })
         .collect::<BTreeMap<String, u32>>();
 
     for (gtfs_itr, enum_itr) in gtfs_stop_names_to_stop_id
