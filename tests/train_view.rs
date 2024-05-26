@@ -79,7 +79,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(trains[0].dest, RegionalRailStop::Wawa);
     assert_eq!(trains[0].current_stop, RegionalRailStop::SuburbanStation);
     assert_eq!(trains[0].next_stop, RegionalRailStop::Gray30thStreet);
-    assert_eq!(trains[0].consist, vec![872, 871, 858, 857]);
+    assert_eq!(trains[0].consist, Some(vec![872, 871, 858, 857]));
     assert_eq!(trains[0].heading, Some(189.8775840187919));
     assert_eq!(trains[0].late, 0);
     assert_eq!(trains[0].source, RegionalRailStop::NorristownTC);
@@ -93,7 +93,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(trains[1].dest, RegionalRailStop::Lansdale);
     assert_eq!(trains[1].current_stop, RegionalRailStop::GwyneddValley);
     assert_eq!(trains[1].next_stop, RegionalRailStop::NorthWales);
-    assert_eq!(trains[1].consist, vec![415, 366, 367, 126, 125]);
+    assert_eq!(trains[1].consist, Some(vec![415, 366, 367, 126, 125]));
     assert_eq!(trains[1].heading, Some(326.98421204774684));
     assert_eq!(trains[1].late, 0);
     assert_eq!(trains[1].source, RegionalRailStop::Newark);
@@ -107,7 +107,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(trains[2].dest, RegionalRailStop::NorristownTC);
     assert_eq!(trains[2].current_stop, RegionalRailStop::SuburbanStation);
     assert_eq!(trains[2].next_stop, RegionalRailStop::JeffersonStation);
-    assert_eq!(trains[2].consist, vec![705, 716, 861, 862]);
+    assert_eq!(trains[2].consist, Some(vec![705, 716, 861, 862]));
     assert_eq!(trains[2].heading, Some(101.50453615740082));
     assert_eq!(trains[2].late, 0);
     assert_eq!(trains[2].source, RegionalRailStop::Wawa);
@@ -142,7 +142,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
 //     assert_eq!(trains[0].current_stop, RegionalRailStop::SuburbanStation);
 //     assert_eq!(trains[0].next_stop, RegionalRailStop::Gray30thStreet);
 //     assert_eq!(trains[0].line, RegionalRailsLine::Cynwyd);
-//     assert_eq!(trains[0].consist, vec![721]);
+//     assert_eq!(trains[0].consist, Some(vec![721]));
 //     assert_eq!(trains[0].heading, Some(279.74492662582446));
 //     assert_eq!(trains[0].late, 0);
 //     assert_eq!(trains[0].source, RegionalRailStop::SuburbanStation);
