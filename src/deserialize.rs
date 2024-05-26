@@ -32,6 +32,30 @@ impl<'a> de::Visitor<'a> for CsvEncodedStringVisitor {
     }
 }
 
+pub fn deserialize_option_csv_encoded_string<'a, D: de::Deserializer<'a>>(
+    deserializer: D,
+) -> Result<Option<Vec<i32>>, D::Error> {
+    deserializer.deserialize_option(OptionCsvEncodedStringVisitor)
+}
+
+struct OptionCsvEncodedStringVisitor;
+
+impl<'a> de::Visitor<'a> for OptionCsvEncodedStringVisitor {
+    type Value = Option<Vec<i32>>;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        write!(formatter, "a string of comma-separated integers or null")
+    }
+
+    fn visit_none<E: de::Error>(self) -> Result<Self::Value, E> {
+        Ok(None)
+    }
+
+    fn visit_some<D: de::Deserializer<'a>>(self, d: D) -> Result<Self::Value, D::Error> {
+        Ok(Some(d.deserialize_str(CsvEncodedStringVisitor)?))
+    }
+}
+
 pub fn deserialize_optional_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
     deserializer: D,
 ) -> Result<Option<T>, D::Error> {
