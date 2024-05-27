@@ -51,6 +51,10 @@ impl<'a> de::Visitor<'a> for OptionCsvEncodedStringVisitor {
         Ok(None)
     }
 
+    fn visit_unit<E: de::Error>(self) -> Result<Self::Value, E> {
+        Ok(None)
+    }
+
     fn visit_some<D: de::Deserializer<'a>>(self, d: D) -> Result<Self::Value, D::Error> {
         Ok(Some(d.deserialize_str(CsvEncodedStringVisitor)?))
     }
@@ -301,13 +305,9 @@ impl<'a> de::Visitor<'a> for F64StringVisitor {
     }
 
     fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
-        match value.parse::<f64>() {
-            Ok(f) => Ok(f),
-            Err(e) => Err(de::Error::custom(format!(
-                "Error {} parsing f64 {}",
-                e, value
-            ))),
-        }
+        value
+            .parse::<f64>()
+            .map_err(|e| de::Error::custom(format!("Error {} parsing f64 {}", e, value)))
     }
 }
 
@@ -327,6 +327,10 @@ impl<'a> de::Visitor<'a> for OptionF64StringVisitor {
     }
 
     fn visit_none<E: de::Error>(self) -> Result<Self::Value, E> {
+        Ok(None)
+    }
+
+    fn visit_unit<E: de::Error>(self) -> Result<Self::Value, E> {
         Ok(None)
     }
 
