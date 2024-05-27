@@ -2,12 +2,6 @@ use chrono::{NaiveDateTime, NaiveTime};
 use serde::de;
 use std::{collections::HashMap, fmt, str::FromStr};
 
-pub fn deserialize_csv_encoded_string<'a, D: de::Deserializer<'a>>(
-    deserializer: D,
-) -> Result<Vec<i32>, D::Error> {
-    deserializer.deserialize_str(CsvEncodedStringVisitor)
-}
-
 struct CsvEncodedStringVisitor;
 
 impl<'a> de::Visitor<'a> for CsvEncodedStringVisitor {

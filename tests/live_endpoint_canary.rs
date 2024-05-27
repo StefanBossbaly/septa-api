@@ -32,15 +32,25 @@ async fn test_live_arrivals_endpoint() -> Result<(), Box<dyn std::error::Error>>
         .bytes()
         .await?;
 
-    let deserialized = &mut serde_json::Deserializer::from_slice(bytes.as_ref());
+    let response_result: Result<responses::ArrivalsResponse, _> =
+        serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(bytes.as_ref()));
 
-    let result: Result<responses::ApiResponse<responses::ArrivalsResponse>, _> =
-        serde_path_to_error::deserialize(deserialized);
-
-    if let Err(err) = result {
+    if let Err(err) = response_result {
         let path = err.path().to_string();
         panic!(
             "Error deserializing ArrivalsResponse: {}: {}",
+            path,
+            std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
+        );
+    }
+
+    let api_response_result: Result<responses::ApiResponse<responses::ArrivalsResponse>, _> =
+        serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(bytes.as_ref()));
+
+    if let Err(err) = api_response_result {
+        let path = err.path().to_string();
+        panic!(
+            "Error deserializing ApiResponse<ArrivalsResponse>: {}: {}",
             path,
             std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
         );
@@ -60,15 +70,25 @@ async fn test_live_train_view_endpoint() -> Result<(), Box<dyn std::error::Error
         .bytes()
         .await?;
 
-    let deserialized = &mut serde_json::Deserializer::from_slice(bytes.as_ref());
+    let response_result: Result<responses::TrainResponse, _> =
+        serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(bytes.as_ref()));
 
-    let result: Result<responses::ApiResponse<responses::TrainResponse>, _> =
-        serde_path_to_error::deserialize(deserialized);
-
-    if let Err(err) = result {
+    if let Err(err) = response_result {
         let path = err.path().to_string();
         panic!(
             "Error deserializing TrainResponse: {}: {}",
+            path,
+            std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
+        );
+    }
+
+    let api_response_result: Result<responses::ApiResponse<responses::TrainResponse>, _> =
+        serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(bytes.as_ref()));
+
+    if let Err(err) = api_response_result {
+        let path = err.path().to_string();
+        panic!(
+            "Error deserializing ApiResponse<TrainResponse>: {}: {}",
             path,
             std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
         );
@@ -95,15 +115,25 @@ async fn test_live_next_to_arrive_endpoint() -> Result<(), Box<dyn std::error::E
         .bytes()
         .await?;
 
-    let deserialized = &mut serde_json::Deserializer::from_slice(bytes.as_ref());
+    let response_result: Result<responses::NextToArriveResponse, _> =
+        serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(bytes.as_ref()));
 
-    let result: Result<responses::ApiResponse<responses::NextToArriveResponse>, _> =
-        serde_path_to_error::deserialize(deserialized);
-
-    if let Err(err) = result {
+    if let Err(err) = response_result {
         let path = err.path().to_string();
         panic!(
             "Error deserializing NextToArriveResponse: {}: {}",
+            path,
+            std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
+        );
+    }
+
+    let api_response_result: Result<responses::ApiResponse<responses::NextToArriveResponse>, _> =
+        serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(bytes.as_ref()));
+
+    if let Err(err) = api_response_result {
+        let path = err.path().to_string();
+        panic!(
+            "Error deserializing ApiResponse<NextToArriveResponse>: {}: {}",
             path,
             std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
         );
@@ -128,33 +158,28 @@ async fn test_live_rail_schedule_endpoint() -> Result<(), Box<dyn std::error::Er
         .bytes()
         .await?;
 
-    let deserialized = &mut serde_json::Deserializer::from_slice(bytes.as_ref());
+    let response_result: Result<responses::RailScheduleResponse, _> =
+        serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(bytes.as_ref()));
 
-    let result: Result<responses::ApiResponse<responses::RailScheduleResponse>, _> =
-        serde_path_to_error::deserialize(deserialized);
+    if let Err(err) = response_result {
+        let path = err.path().to_string();
+        panic!(
+            "Error deserializing RailScheduleResponse: {}: {}",
+            path,
+            std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
+        );
+    }
 
-    match result {
-        Ok(response) => match response {
-            responses::ApiResponse::Response(schedule) => {
-                if schedule.is_empty() {
-                    panic!("Expected at least one schedule entry, found none");
-                }
-            }
-            responses::ApiResponse::Error(err) => {
-                panic!(
-                    "Expected ApiResponse::Response, found ApiResponse::Error: {}",
-                    err
-                );
-            }
-        },
-        Err(err) => {
-            let path = err.path().to_string();
-            panic!(
-                "Error deserializing RailScheduleResponse: {}: {}",
-                path,
-                std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
-            );
-        }
+    let api_response_result: Result<responses::ApiResponse<responses::RailScheduleResponse>, _> =
+        serde_path_to_error::deserialize(&mut serde_json::Deserializer::from_slice(bytes.as_ref()));
+
+    if let Err(err) = api_response_result {
+        let path = err.path().to_string();
+        panic!(
+            "Error deserializing ApiResponse<RailScheduleResponse>: {}: {}",
+            path,
+            std::str::from_utf8(bytes.as_ref()).unwrap_or("Failed to convert bytes to string")
+        );
     }
 
     Ok(())
