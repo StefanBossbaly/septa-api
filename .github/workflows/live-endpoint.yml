@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: "30 13 * * *" # Run at 8:30 AM EST (Morning Rush Hour)
     - cron: "15 22 * * *" # Run at 5:15 PM EST (Evening Rust Hour)
+  workflow_dispatch:
 
 jobs:
   live-endpoint:
