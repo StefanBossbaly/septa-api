@@ -34,7 +34,7 @@ async fn test_live_arrivals_endpoint() -> Result<(), Box<dyn std::error::Error>>
 
     let deserialized = &mut serde_json::Deserializer::from_slice(bytes.as_ref());
 
-    let result: Result<responses::ArrivalsResponse, _> =
+    let result: Result<responses::ApiResponse<responses::ArrivalsResponse>, _> =
         serde_path_to_error::deserialize(deserialized);
 
     if let Err(err) = result {
@@ -62,7 +62,7 @@ async fn test_live_train_view_endpoint() -> Result<(), Box<dyn std::error::Error
 
     let deserialized = &mut serde_json::Deserializer::from_slice(bytes.as_ref());
 
-    let result: Result<responses::TrainResponse, _> =
+    let result: Result<responses::ApiResponse<responses::TrainResponse>, _> =
         serde_path_to_error::deserialize(deserialized);
 
     if let Err(err) = result {
@@ -97,7 +97,7 @@ async fn test_live_next_to_arrive_endpoint() -> Result<(), Box<dyn std::error::E
 
     let deserialized = &mut serde_json::Deserializer::from_slice(bytes.as_ref());
 
-    let result: Result<responses::NextToArriveResponse, _> =
+    let result: Result<responses::ApiResponse<responses::NextToArriveResponse>, _> =
         serde_path_to_error::deserialize(deserialized);
 
     if let Err(err) = result {
@@ -130,15 +130,23 @@ async fn test_live_rail_schedule_endpoint() -> Result<(), Box<dyn std::error::Er
 
     let deserialized = &mut serde_json::Deserializer::from_slice(bytes.as_ref());
 
-    let result: Result<responses::RailScheduleResponse, _> =
+    let result: Result<responses::ApiResponse<responses::RailScheduleResponse>, _> =
         serde_path_to_error::deserialize(deserialized);
 
     match result {
-        Ok(schedule) => {
-            if schedule.is_empty() {
-                panic!("Expected at least one schedule entry, found none");
+        Ok(response) => match response {
+            responses::ApiResponse::Response(schedule) => {
+                if schedule.is_empty() {
+                    panic!("Expected at least one schedule entry, found none");
+                }
             }
-        }
+            responses::ApiResponse::Error(err) => {
+                panic!(
+                    "Expected ApiResponse::Response, found ApiResponse::Error: {}",
+                    err
+                );
+            }
+        },
         Err(err) => {
             let path = err.path().to_string();
             panic!(
