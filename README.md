@@ -1,10 +1,12 @@
 # SEPTA-API ![crates.io](https://img.shields.io/crates/v/septa-api.svg) [![](https://docs.rs/septa-api/badge.svg)](https://docs.rs/septa-api)
 
-This project provides developers with a standard and ergonomic Rust API for calling the various endpoints in
-SEPTA (Southeastern Pennsylvania Transportation Authority) API. It handles the serialization and deserialization
-of the requests and responses and allows the developer to use the provided well-defined data types. It also handles
-some of the messy parts of the API (multiple serializations per stop, quarky endpoint responses, multiple datetime
-formats, etc).
+This project provides developers with a standard and ergonomic Rust API for
+calling the various endpoints in SEPTA (Southeastern Pennsylvania Transportation
+Authority) API. It handles the serialization and deserialization of the requests
+and responses and allows the developer to use the provided well-defined data
+types. It also handles some of the messy parts of the API (multiple
+serializations per stop, quarky endpoint responses, multiple datetime formats,
+etc).
 
 ## Example Usage
 
@@ -50,6 +52,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
+## Testing
+
+This crate is tested daily during the morning (8:30 AM EST) and evening (5:15 PM
+EST) rush hour commutes and in the dead of the night (3 AM EST). You may wonder
+why such a dichotomy, and the reason is to attempt to get data when the network
+is at its peak and during a lull. SEPTA is not the best in outlining all their
+API responses so some of this library is reversed engineered. By capturing both
+these states, we hope to detect any breaking changes in SEPTA's API and can
+therefore fix them ASAP.
+
 ## API Implementation and Testing Status
 
 ### Real Time Data API
@@ -81,7 +93,8 @@ Stefan Bossbaly
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details
+This project is licensed under the MIT License - see the LICENSE file for
+details
 
 ## Acknowledgments
 

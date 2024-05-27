@@ -2,8 +2,9 @@ name: Live Endpoint Test
 
 on:
   schedule:
-    - cron: "30 13 * * *" # Run at 8:30 AM EST (Morning Rush Hour)
-    - cron: "15 22 * * *" # Run at 5:15 PM EST (Evening Rust Hour)
+    - cron: "30 12 * * *" # Run at 8:30 AM EST (Morning Rush Hour)
+    - cron: "15 21 * * *" # Run at 5:15 PM EST (Evening Rust Hour)
+    - cron: "00 07 * * *" # Run at 3:00 AM EST (Dead of the night)
   workflow_dispatch:
 
 jobs:
