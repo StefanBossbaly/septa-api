@@ -15,8 +15,6 @@ jobs:
           - ubuntu-latest
           - macos-latest
           - windows-latest
-        rust:
-          - stable
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Source
@@ -24,14 +22,15 @@ jobs:
         with:
           lfs: true
 
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: ${{ matrix.rust }}
-          override: true
           components: rustfmt, clippy
 
-      - name: Display Toolchain Information
+      - name: Setup Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Display Rust Toolchain Information
         run: |
           cargo --version --verbose
           rustc --version
