@@ -17,10 +17,13 @@ jobs:
         with:
           lfs: false
 
-      - name: Install toolchain
+      - name: Install Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Display Toolchain Information
+      - name: Setup Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Display Rust Toolchain Information
         run: |
           cargo --version --verbose
           rustc --version
