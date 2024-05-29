@@ -329,6 +329,8 @@ impl<'a> de::Visitor<'a> for OptionF64StringVisitor {
     }
 
     fn visit_some<D: de::Deserializer<'a>>(self, d: D) -> Result<Self::Value, D::Error> {
-        Ok(Some(d.deserialize_str(F64StringVisitor)?))
+        Ok(d.deserialize_str(F64StringVisitor)
+            .map(Some)
+            .unwrap_or(None))
     }
 }
