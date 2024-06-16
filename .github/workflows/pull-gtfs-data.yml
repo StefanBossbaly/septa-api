@@ -39,7 +39,6 @@ jobs:
           commit-message:
             Update SEPTA GTFS to ${{steps.gtfs-release.outputs.tag_name}}
           assignees: StefanBossbaly
-          reviewers: StefanBossbaly
           branch: gtfs-update-to-${{steps.gtfs-release.outputs.tag_name}}
           delete-branch: true
           token: ${{ secrets.PAT_TOKEN }}
