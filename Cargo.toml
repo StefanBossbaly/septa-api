@@ -18,11 +18,11 @@ include = [
 
 [dependencies]
 chrono = "0.4.38"
-reqwest = { version = "0.12.4", features = ["json"] }
-serde_json = "1.0.117"
-serde = { version = "1.0.203", features = ["derive"] }
+reqwest = { version = "0.12.5", features = ["json"] }
+serde_json = "1.0.120"
+serde = { version = "1.0.204", features = ["derive"] }
 strum = { version = "0.26", features = ["derive"] }
-thiserror = "1.0.61"
+thiserror = "1.0.62"
 
 [dev-dependencies]
 mockito = "1.4.0"
