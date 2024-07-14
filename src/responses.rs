@@ -1,5 +1,5 @@
 use chrono::{NaiveDateTime, NaiveTime};
-use serde::Deserialize;
+use serde::{ser::Error, Deserialize};
 use std::{collections::HashMap, convert::TryFrom};
 
 use crate::{
@@ -34,14 +34,21 @@ pub struct ArrivalsResponse {
 struct ArrivalsResponseBuilder(HashMap<String, Vec<serde_json::Value>>);
 
 impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
-    type Error = String;
+    type Error = serde_json::Error;
 
     fn try_from(builder: ArrivalsResponseBuilder) -> Result<Self, Self::Error> {
-        if builder.0.len() != 1 {
-            return Err(format!("expected 1 key, found {}", builder.0.len()));
-        }
-
-        let (title, values) = builder.0.into_iter().next().unwrap();
+        let (title, values) = {
+            let builder_len = builder.0.len();
+            match builder.0.into_iter().next() {
+                Some((title, value)) => (title, value),
+                None => {
+                    return Err(serde_json::Error::custom(format!(
+                        "expected 1 key, found {}",
+                        builder_len
+                    )))
+                }
+            }
+        };
 
         let mut northbound = None;
         let mut southbound = None;
@@ -53,35 +60,39 @@ impl TryFrom<ArrivalsResponseBuilder> for ArrivalsResponse {
                 match result.len() {
                     0 => continue,
                     _ => {
-                        return Err("Unknown response".to_string());
+                        return Err(serde_json::Error::custom("Unknown response"));
                     }
                 }
             }
 
             let mut inner_values = serde_json::from_value::<HashMap<String, Vec<Arrivals>>>(value)
-                .map_err(|e| e.to_string())?;
+                .map_err(|err| {
+                    serde_json::Error::custom(format!("Could not parse inner values: {}", err))
+                })?;
 
             if let Some(northbound_values) = inner_values.remove("Northbound") {
-                if northbound.is_some() {
-                    return Err("Found two northbound key values".to_string());
-                }
-
-                northbound = Some(northbound_values);
+                northbound = match northbound {
+                    Some(_) => {
+                        return Err(serde_json::Error::custom("Found two northbound key values"))
+                    }
+                    None => Some(northbound_values),
+                };
             }
 
             if let Some(southbound_values) = inner_values.remove("Southbound") {
-                if southbound.is_some() {
-                    return Err("Found two southbound key values".to_string());
-                }
-
-                southbound = Some(southbound_values);
+                southbound = match southbound {
+                    Some(_) => {
+                        return Err(serde_json::Error::custom("Found two southbound key values"))
+                    }
+                    None => Some(southbound_values),
+                };
             }
         }
 
         Ok(ArrivalsResponse {
             title,
-            northbound: northbound.unwrap_or(Vec::new()),
-            southbound: southbound.unwrap_or(Vec::new()),
+            northbound: northbound.unwrap_or_default(),
+            southbound: southbound.unwrap_or_default(),
         })
     }
 }

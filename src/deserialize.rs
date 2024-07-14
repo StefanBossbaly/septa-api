@@ -57,17 +57,22 @@ impl<'a> de::Visitor<'a> for OptionCsvEncodedStringVisitor {
 pub fn deserialize_optional_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
     deserializer: D,
 ) -> Result<Option<T>, D::Error> {
-    deserializer.deserialize_option(OptionStringEnumVisitor {
-        _marker: Default::default(),
-    })
+    deserializer.deserialize_option(OptionStringEnumVisitor::default())
 }
 
-#[derive(Default)]
-struct OptionStringEnumVisitor<'a, T: FromStr> {
-    _marker: std::marker::PhantomData<&'a T>,
+struct OptionStringEnumVisitor<T> {
+    _marker: std::marker::PhantomData<T>,
 }
 
-impl<'a, T: FromStr> de::Visitor<'a> for OptionStringEnumVisitor<'a, T> {
+impl<T> Default for OptionStringEnumVisitor<T> {
+    fn default() -> Self {
+        Self {
+            _marker: Default::default(),
+        }
+    }
+}
+
+impl<'a, T: FromStr> de::Visitor<'a> for OptionStringEnumVisitor<T> {
     type Value = Option<T>;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -87,9 +92,7 @@ impl<'a, T: FromStr> de::Visitor<'a> for OptionStringEnumVisitor<'a, T> {
     }
 
     fn visit_some<D: de::Deserializer<'a>>(self, d: D) -> Result<Self::Value, D::Error> {
-        Ok(Some(d.deserialize_str(StringEnumVisitor {
-            _marker: Default::default(),
-        })?))
+        Ok(Some(d.deserialize_str(StringEnumVisitor::default())?))
     }
 }
 
@@ -101,12 +104,19 @@ pub fn deserialize_string_enum<'a, D: de::Deserializer<'a>, T: FromStr + 'a>(
     })
 }
 
-#[derive(Default)]
-struct StringEnumVisitor<'a, T: FromStr> {
-    _marker: std::marker::PhantomData<&'a T>,
+struct StringEnumVisitor<T> {
+    _marker: std::marker::PhantomData<T>,
 }
 
-impl<'a, T: FromStr> de::Visitor<'a> for StringEnumVisitor<'a, T> {
+impl<T> Default for StringEnumVisitor<T> {
+    fn default() -> Self {
+        Self {
+            _marker: Default::default(),
+        }
+    }
+}
+
+impl<'a, T: FromStr> de::Visitor<'a> for StringEnumVisitor<T> {
     type Value = T;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -158,8 +168,6 @@ pub fn deserialize_naive_date_time<'a, D: de::Deserializer<'a>>(
     deserializer.deserialize_str(NaiveDateTimeVisitor)
 }
 
-const DATE_TIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S%.f";
-
 struct NaiveDateTimeVisitor;
 
 impl<'a> de::Visitor<'a> for NaiveDateTimeVisitor {
@@ -170,13 +178,10 @@ impl<'a> de::Visitor<'a> for NaiveDateTimeVisitor {
     }
 
     fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
-        match NaiveDateTime::parse_from_str(value, DATE_TIME_FORMAT) {
-            Ok(date) => Ok(date),
-            Err(e) => Err(E::custom(format!(
-                "Error {} parsing timestamp {}",
-                e, value
-            ))),
-        }
+        const DATE_TIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S%.f";
+
+        NaiveDateTime::parse_from_str(value, DATE_TIME_FORMAT)
+            .map_err(|err| E::custom(format!("Error {} parsing timestamp {}", err, value)))
     }
 }
 
@@ -185,8 +190,6 @@ pub fn deserialize_naive_time<'a, D: de::Deserializer<'a>>(
 ) -> Result<NaiveTime, D::Error> {
     deserializer.deserialize_str(NaiveTimeVisitor)
 }
-
-const TIME_FORMAT: &str = "%I:%M%p";
 
 struct NaiveTimeVisitor;
 
@@ -198,10 +201,10 @@ impl<'a> de::Visitor<'a> for NaiveTimeVisitor {
     }
 
     fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
-        match NaiveTime::parse_from_str(value, TIME_FORMAT) {
-            Ok(date) => Ok(date),
-            Err(e) => Err(E::custom(format!("Error {} parsing time {}", e, value))),
-        }
+        const TIME_FORMAT: &str = "%I:%M%p";
+
+        NaiveTime::parse_from_str(value, TIME_FORMAT)
+            .map_err(|err| E::custom(format!("Error {} parsing time {}", err, value)))
     }
 }
 
@@ -226,10 +229,8 @@ impl<'a> de::Visitor<'a> for NaiveTimeWithSpaceVisitor {
     }
 
     fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
-        match NaiveTime::parse_from_str(value, TIME_FORMAT_WITH_SPACE) {
-            Ok(date) => Ok(date),
-            Err(e) => Err(E::custom(format!("Error {} parsing time {}", e, value))),
-        }
+        NaiveTime::parse_from_str(value, TIME_FORMAT_WITH_SPACE)
+            .map_err(|err| E::custom(format!("Error {} parsing time {}", err, value)))
     }
 }
 
@@ -255,10 +256,9 @@ impl<'a> de::Visitor<'a> for OptionNaiveTimeWithSpaceVisitor {
         if value == "na" {
             Ok(None)
         } else {
-            match NaiveTime::parse_from_str(value, TIME_FORMAT_WITH_SPACE) {
-                Ok(date) => Ok(Some(date)),
-                Err(e) => Err(E::custom(format!("Error {} parsing time {}", e, value))),
-            }
+            NaiveTime::parse_from_str(value, TIME_FORMAT_WITH_SPACE)
+                .map(Some)
+                .map_err(|err| E::custom(format!("Error {} parsing time {}", err, value)))
         }
     }
 }
