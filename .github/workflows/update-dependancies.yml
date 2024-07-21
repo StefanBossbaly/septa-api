@@ -1,0 +1,35 @@
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+name: Create a PR on new dependancies version
+
+jobs:
+  check-gtfs-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Update Rust Dependencies
+        id: update-rust-dependencies
+        run: |
+          cargo update
+          echo "CARGO_UPGRADE_OUTPUT=$(cargo upgrade --incompatible)" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: |
+            Cargo.toml
+          title: Update Dependancies
+          body: ${{ steps.update-rust-dependencies.outputs.CARGO_UPGRADE_OUTPUT }}
+          commit-message: ${{ steps.update-rust-dependencies.outputs.CARGO_UPGRADE_OUTPUT }}
+          assignees: StefanBossbaly
+          branch: update-dependancies-${{github.event.repository.updated_at}}
+          delete-branch: true
+          token: ${{ secrets.PAT_TOKEN }}
