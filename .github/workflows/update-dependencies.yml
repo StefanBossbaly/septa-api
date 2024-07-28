@@ -3,10 +3,10 @@ on:
     - cron: "0 0 * * 0"
   workflow_dispatch:
 
-name: Update Dependancies
+name: Update Dependencies
 
 jobs:
-  update-dependancies:
+  update-dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Timestamp Action
@@ -28,17 +28,26 @@ jobs:
         id: update-rust-dependencies
         run: |
           cargo update
-          echo "CARGO_UPGRADE_OUTPUT=$(cargo-upgrade upgrade --incompatible)" >> $GITHUB_ENV
+          echo 'CARGO_UPGRADE_OUTPUT<<EOF' >> $GITHUB_OUTPUT
+          cargo-upgrade upgrade --incompatible 2>&1 >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           add-paths: |
             Cargo.toml
-          title: Update Dependancies
-          body: ${{ steps.update-rust-dependencies.outputs.CARGO_UPGRADE_OUTPUT }}
-          commit-message: ${{ steps.update-rust-dependencies.outputs.CARGO_UPGRADE_OUTPUT }}
+          title: Update dependencies
+          body: |
+            Updated dependencies:
+            ```
+            ${{ steps.update-rust-dependencies.outputs.CARGO_UPGRADE_OUTPUT }}
+            ```
+          commit-message: |
+            Update dependencies
+
+            ${{ steps.update-rust-dependencies.outputs.CARGO_UPGRADE_OUTPUT }}
           assignees: StefanBossbaly
-          branch: update-dependancies-${{ steps.version.outputs.NOW }}
+          branch: update-dependencies-${{ steps.version.outputs.NOW }}
           delete-branch: true
           token: ${{ secrets.PAT_TOKEN }}
