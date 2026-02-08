@@ -83,7 +83,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
                     "line": "Trenton",
                     "status": "On Time",
                     "service_type": "LOCAL",
-                    "next_station": "North Philadelphia",
+                    "next_station": "North Philadelphia Septa",
                     "sched_time": "2023-04-11 18:59:00.000",
                     "depart_time": "2023-04-11 18:59:00.000",
                     "track": "2",
@@ -96,7 +96,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
                     "path": "R3/2N",
                     "train_id": "3230",
                     "origin": "Wawa",
-                    "destination": "Norristown",
+                    "destination": "Norristown Transit Center",
                     "line": "Media/Wawa",
                     "status": "1 min",
                     "service_type": "LOCAL",
@@ -242,7 +242,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival4.service_type, ServiceType::Local);
     assert_eq!(
         arrival4.next_station,
-        Some(RegionalRailStop::NorthPhiladelphia)
+        Some(RegionalRailStop::NorthPhiladelphiaSepta)
     );
     assert_eq!(
         arrival4.sched_time,
@@ -269,7 +269,10 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival5.path, "R3/2N");
     assert_eq!(arrival5.train_id, "3230");
     assert_eq!(arrival5.origin, RegionalRailStop::Wawa);
-    assert_eq!(arrival5.destination, RegionalRailStop::NorristownTC);
+    assert_eq!(
+        arrival5.destination,
+        RegionalRailStop::NorristownTransitCenter
+    );
     assert_eq!(arrival5.line, Some(RegionalRailsLine::MediaWawa));
     assert_eq!(arrival5.status, "1 min");
     assert_eq!(arrival5.service_type, ServiceType::Local);
