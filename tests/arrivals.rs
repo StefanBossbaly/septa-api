@@ -138,7 +138,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival1.train_id, "5344");
     assert_eq!(arrival1.origin, RegionalRailStop::Thorndale);
     assert_eq!(arrival1.destination, RegionalRailStop::WestTrenton);
-    assert_eq!(arrival1.line, RegionalRailsLine::WestTrenton);
+    assert_eq!(arrival1.line, Some(RegionalRailsLine::WestTrenton));
     assert_eq!(arrival1.status, "12 min");
     assert_eq!(arrival1.service_type, ServiceType::Local);
     assert_eq!(
@@ -171,7 +171,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival2.train_id, "9854");
     assert_eq!(arrival2.origin, RegionalRailStop::ChestnutHillWest);
     assert_eq!(arrival2.destination, RegionalRailStop::TempleUniversity);
-    assert_eq!(arrival2.line, RegionalRailsLine::FoxChase);
+    assert_eq!(arrival2.line, Some(RegionalRailsLine::FoxChase));
     assert_eq!(arrival2.status, "On Time");
     assert_eq!(arrival2.service_type, ServiceType::Local);
     assert_eq!(
@@ -204,7 +204,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival3.train_id, "4854");
     assert_eq!(arrival3.origin, RegionalRailStop::AirportTerminalEF);
     assert_eq!(arrival3.destination, RegionalRailStop::FoxChase);
-    assert_eq!(arrival3.line, RegionalRailsLine::FoxChase);
+    assert_eq!(arrival3.line, Some(RegionalRailsLine::FoxChase));
     assert_eq!(arrival3.status, "On Time");
     assert_eq!(arrival3.service_type, ServiceType::Local);
     assert_eq!(
@@ -237,7 +237,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival4.train_id, "9754");
     assert_eq!(arrival4.origin, RegionalRailStop::Trenton);
     assert_eq!(arrival4.destination, RegionalRailStop::TempleUniversity);
-    assert_eq!(arrival4.line, RegionalRailsLine::Trenton);
+    assert_eq!(arrival4.line, Some(RegionalRailsLine::Trenton));
     assert_eq!(arrival4.status, "On Time");
     assert_eq!(arrival4.service_type, ServiceType::Local);
     assert_eq!(
@@ -270,7 +270,7 @@ async fn test_deserialize1_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival5.train_id, "3230");
     assert_eq!(arrival5.origin, RegionalRailStop::Wawa);
     assert_eq!(arrival5.destination, RegionalRailStop::NorristownTC);
-    assert_eq!(arrival5.line, RegionalRailsLine::MediaWawa);
+    assert_eq!(arrival5.line, Some(RegionalRailsLine::MediaWawa));
     assert_eq!(arrival5.status, "1 min");
     assert_eq!(arrival5.service_type, ServiceType::Local);
     assert_eq!(arrival5.next_station, Some(RegionalRailStop::Secane));
@@ -426,7 +426,7 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival1.train_id, "5348");
     assert_eq!(arrival1.origin, RegionalRailStop::Malvern);
     assert_eq!(arrival1.destination, RegionalRailStop::WestTrenton);
-    assert_eq!(arrival1.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival1.line, Some(RegionalRailsLine::PaoliThorndale));
     assert_eq!(arrival1.status, "On Time");
     assert_eq!(arrival1.service_type, ServiceType::Local);
     assert_eq!(arrival1.next_station, None);
@@ -456,7 +456,7 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival2.train_id, "5352");
     assert_eq!(arrival2.origin, RegionalRailStop::Thorndale);
     assert_eq!(arrival2.destination, RegionalRailStop::WestTrenton);
-    assert_eq!(arrival2.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival2.line, Some(RegionalRailsLine::PaoliThorndale));
     assert_eq!(arrival2.status, "On Time");
     assert_eq!(arrival2.service_type, ServiceType::Local);
     assert_eq!(arrival2.next_station, None);
@@ -486,7 +486,7 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival3.train_id, "5356");
     assert_eq!(arrival3.origin, RegionalRailStop::Thorndale);
     assert_eq!(arrival3.destination, RegionalRailStop::WestTrenton);
-    assert_eq!(arrival3.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival3.line, Some(RegionalRailsLine::PaoliThorndale));
     assert_eq!(arrival3.status, "On Time");
     assert_eq!(arrival3.service_type, ServiceType::Local);
     assert_eq!(arrival3.next_station, None);
@@ -516,7 +516,7 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival4.train_id, "9564");
     assert_eq!(arrival4.origin, RegionalRailStop::Malvern);
     assert_eq!(arrival4.destination, RegionalRailStop::TempleUniversity);
-    assert_eq!(arrival4.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival4.line, Some(RegionalRailsLine::PaoliThorndale));
     assert_eq!(arrival4.status, "On Time");
     assert_eq!(arrival4.service_type, ServiceType::Local);
     assert_eq!(arrival4.next_station, None);
@@ -546,7 +546,7 @@ async fn test_deserialize2_async() -> Result<(), septa_api::errors::Error> {
     assert_eq!(arrival5.train_id, "9566");
     assert_eq!(arrival5.origin, RegionalRailStop::Thorndale);
     assert_eq!(arrival5.destination, RegionalRailStop::TempleUniversity);
-    assert_eq!(arrival5.line, RegionalRailsLine::PaoliThorndale);
+    assert_eq!(arrival5.line, Some(RegionalRailsLine::PaoliThorndale));
     assert_eq!(arrival5.status, "On Time");
     assert_eq!(arrival5.service_type, ServiceType::Local);
     assert_eq!(arrival5.next_station, None);

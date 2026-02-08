@@ -101,12 +101,12 @@ impl Client {
     ///
     ///     // Loop through the northbound arrivals
     ///     for train in response.northbound {
-    ///         println!("Train {} is currently {} on the {} line", train.train_id, train.status, train.line.to_string());
+    ///         println!("Train {} is currently {} on the {} line", train.train_id, train.status, train.line.map(|line| line.to_string()).unwrap_or("Unknown".to_string()));
     ///     }
     ///
     ///     // Loop through the southbound arrivals
     ///     for train in response.southbound {
-    ///         println!("Train {} is currently {} on the {} line", train.train_id, train.status, train.line.to_string());
+    ///         println!("Train {} is currently {} on the {} line", train.train_id, train.status, train.line.map(|line| line.to_string()).unwrap_or("Unknown".to_string()));
     ///     }
     ///
     ///     Ok(())
@@ -199,7 +199,7 @@ impl Client {
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
     ///     let client = Client::new();
     ///     let request = RailScheduleRequest {
-    ///         train_number: "514".to_string()
+    ///         train_number: "1729".to_string()
     ///     };
     ///     let response = client.rail_schedule(request).await?;
     ///

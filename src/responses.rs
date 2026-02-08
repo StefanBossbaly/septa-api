@@ -109,8 +109,8 @@ pub struct Arrivals {
     #[serde(deserialize_with = "deserialize_string_enum")]
     pub destination: RegionalRailStop,
 
-    #[serde(deserialize_with = "deserialize_string_enum")]
-    pub line: RegionalRailsLine,
+    #[serde(deserialize_with = "deserialize_optional_string_enum")]
+    pub line: Option<RegionalRailsLine>,
     pub status: String,
 
     #[serde(deserialize_with = "deserialize_string_enum")]

@@ -147,7 +147,7 @@ async fn test_live_rail_schedule_endpoint() -> Result<(), Box<dyn std::error::Er
     const ENDPOINT: &str = "/RRSchedules/index.php";
 
     let request = requests::RailScheduleRequest {
-        train_number: "514".to_string(),
+        train_number: "1729".to_string(),
     };
 
     let bytes = Client::new()
